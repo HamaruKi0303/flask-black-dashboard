@@ -1,6 +1,10 @@
 FROM python:3.9
 
-WORKDIR /home
+WORKDIR /flask_base
+
+# init
+RUN apt-get update && \
+    apt-get install -y rsync
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -23,4 +27,5 @@ RUN flask db migrate
 RUN flask db upgrade
 
 # gunicorn
-CMD ["gunicorn", "--config", "gunicorn-cfg.py", "run:app"]
+# CMD ["gunicorn", "--config", "gunicorn-cfg.py", "run:app"]
+# gunicorn --config gunicorn-cfg.py run:app

@@ -8,6 +8,10 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
 
+# ----------------------------------------
+# my bp site 
+#
+from apps.home.app2 import bp
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -42,7 +46,10 @@ def create_app(config):
     register_extensions(app)
 
     app.register_blueprint(github_blueprint, url_prefix="/login")
-    
     register_blueprints(app)
+    
+    # regit sample site 
+    app.register_blueprint(bp)
+
     configure_database(app)
     return app

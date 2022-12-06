@@ -12,6 +12,7 @@
 - [5. Detail](#5-detail)
   - [5.1. ✨ フォルダ構成](#51--フォルダ構成)
 - [6. Reference site](#6-reference-site)
+- [memo](#memo)
 
 ## 1. Introduction
 
@@ -104,3 +105,9 @@ The project is coded using blueprints, app factory pattern, dual configuration p
 ## 6. Reference site
 
 - [flask-black-dashboard](https://github.com/app-generator/flask-black-dashboard)
+
+## memo
+
+```bash
+rsync -auv /home/ /root/
+```
