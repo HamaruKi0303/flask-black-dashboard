@@ -1,0 +1,1 @@
+docker-compose exec appseed-app /bin/bash

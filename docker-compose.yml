@@ -7,6 +7,10 @@ services:
     networks:
       - db_network
       - web_network
+    volumes:
+      - .:/home
+    working_dir: /home
+
   nginx:
     container_name: nginx
     restart: always
@@ -24,4 +28,3 @@ networks:
     driver: bridge
   web_network:
     driver: bridge
- 
