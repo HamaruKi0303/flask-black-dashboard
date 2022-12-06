@@ -11,7 +11,8 @@ from importlib import import_module
 # ----------------------------------------
 # my bp site 
 #
-from apps.home.app2 import bp
+from apps.home.sample.app1 import bp as sample_app1
+from apps.home.sample.app2 import bp as sample_app2
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -49,7 +50,8 @@ def create_app(config):
     register_blueprints(app)
     
     # regit sample site 
-    app.register_blueprint(bp)
+    app.register_blueprint(sample_app1)
+    app.register_blueprint(sample_app2)
 
     configure_database(app)
     return app

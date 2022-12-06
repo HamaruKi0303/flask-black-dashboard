@@ -49,6 +49,22 @@ Visit `http://localhost:5085` in your browser. The app should be up & running.
 ## 5. Detail
 
 
+
+## Sample site
+
+### Simple text page
+
+http://192.168.0.100:7777/sample_app1
+
+![](https://i.imgur.com/TaaA7V1.png)
+
+### Simple HTML page
+
+http://192.168.0.100:7777/sample_app2
+
+![](https://i.imgur.com/6MTEMEE.png)
+
+
 ### 5.1. ✨ フォルダ構成
 
 The project is coded using blueprints, app factory pattern, dual configuration profile (development and production) and an intuitive structure presented bellow:
