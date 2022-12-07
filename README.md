@@ -293,9 +293,92 @@ def sample_app4():
 
 開発用と本番用でサイドバーを切り替えます．
 
+`running_type`で開発用か本番用かのフラグを送ります．
+
 `apps\home\sample\app5.py`
 
-![](https://i.imgur.com/aOKXrki.png)
+```python
+from flask import Flask, render_template, url_for, request, redirect, Blueprint
+from datetime import datetime
+
+import pandas as pd
+import pprint
+from loguru import logger
+# Blueprint を作成
+bp = Blueprint('sample_app5', __name__)
+
+# /post にアクセスされ、GETもしくはPOSTメソッドでデータが送信された場合の処理
+@bp.route('/sample_app5', methods=['GET', 'POST'])
+def sample_app5():
+    
+    segment = "sample_app5"
+    # running_type = "develop"
+    running_type = "master"
+    
+    form_data_path = "apps/static/assets/data/form_data.csv"
+    df_form = pd.read_csv(form_data_path, index_col=0)
+    
+    # POSTメソッドの場合
+    if request.method == 'POST':
+
+        dict_form = request.form.to_dict()
+        df_form = df_form.append(dict_form, ignore_index=True)
+        
+        logger.info("df_form")
+        df_form.to_csv(form_data_path)
+        pprint.pprint(df_form)
+        
+    logger.info("dict_list_form")
+    dict_list_form = df_form.to_dict('records')
+    pprint.pprint(dict_list_form)
+    # name = request.form['name']
+    
+    return render_template('sample/app3.html', 
+                            dict_list_form=dict_list_form, 
+                            segment=segment, 
+                            running_type=running_type)
+```
+
+送信した`running_type`を受け取って，本番用なら特になにもしません．一方で開発用なら，`includes/sidebar_develop.html`を読み込みサイドバーを追加します．
+
+`apps\templates\includes\sidebar.html`
+
+```html
+
+...
+
+                <li class="{% if 'sample_app4' in segment %} active {% endif %}">
+                    <a href="/sample_app4">
+                        <i class="tim-icons icon-spaceship"></i>
+                        <p>Sample4</p>
+                    </a>
+                </li>
+                <li class="{% if 'sample_app5' in segment %} active {% endif %}">
+                    <a href="/sample_app5">
+                        <i class="tim-icons icon-spaceship"></i>
+                        <p>Sample5</p>
+                    </a>
+                </li>
+                
+                {% if 'master' in running_type  %}
+
+                {% else %}
+                    {% include 'includes/sidebar_develop.html' %}                    
+                {% endif %}
+
+                <li>
+                    <a href="{{ url_for('authentication_blueprint.logout') }}">
+                        <i class="tim-icons icon-button-power"></i>
+                        <p>Logout</p>
+                    </a>
+                </li>
+...
+
+```
+👇サイト
+> http://192.168.0.100:7777/sample_app5
+
+![](https://i.imgur.com/6wIjjec.png)
 
 ## 7. Reference site
 
