@@ -45,7 +45,13 @@
 
     <div class="wrapper">
 
-        {% include 'includes/sidebar.html' %}
+        {% if 'develop' in running_type  %}
+            {% include 'includes/sidebar_develop.html' %}
+        {% else %}
+            {% include 'includes/sidebar.html' %}
+        {% endif %}
+
+        
 
         <div class="main-panel">
 
