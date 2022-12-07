@@ -32,12 +32,31 @@
                         <p>Sample2</p>
                     </a>
                 </li>
-                <li class="{% if 'sample_app3' in segment %} active {% endif %}">
+                <li class="{% if 'map' in segment %} active {% endif %}">
                     <a href="/sample_app3">
                         <i class="tim-icons icon-spaceship"></i>
                         <p>Sample3</p>
                     </a>
                 </li>
+                <li class="{% if 'sample_app4' in segment %} active {% endif %}">
+                    <a href="/sample_app4">
+                        <i class="tim-icons icon-spaceship"></i>
+                        <p>Sample4</p>
+                    </a>
+                </li>
+                <li class="{% if 'sample_app5' in segment %} active {% endif %}">
+                    <a href="/sample_app5">
+                        <i class="tim-icons icon-spaceship"></i>
+                        <p>Sample5</p>
+                    </a>
+                </li>
+                
+                {% if 'master' in running_type  %}
+
+                {% else %}
+                    {% include 'includes/sidebar_develop.html' %}                    
+                {% endif %}
+
                 <li>
                     <a href="{{ url_for('authentication_blueprint.logout') }}">
                         <i class="tim-icons icon-button-power"></i>
