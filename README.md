@@ -15,6 +15,8 @@
   - [6.1. Simple text page](#61-simple-text-page)
   - [6.2. Simple HTML page](#62-simple-html-page)
   - [6.3. POST page](#63-post-page)
+  - [6.4. Active sidebar](#64-active-sidebar)
+  - [6.5. Switch sidebar](#65-switch-sidebar)
 - [7. Reference site](#7-reference-site)
 - [8. memo](#8-memo)
 
@@ -205,6 +207,18 @@ def sample_app3():
 
 ![](https://i.imgur.com/3624YnZ.png)
 
+### 6.4. Active sidebar
+
+`apps\home\sample\app4.py`
+
+![](https://i.imgur.com/DPA1UEF.png)
+
+
+### 6.5. Switch sidebar
+
+`apps\home\sample\app5.py`
+
+![](https://i.imgur.com/aOKXrki.png)
 
 ## 7. Reference site
 
