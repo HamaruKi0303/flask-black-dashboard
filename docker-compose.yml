@@ -8,8 +8,15 @@ services:
       - db_network
       - web_network
     volumes:
-      - .:/home
-    working_dir: /home
+      # - .:/home
+      - .:/flask_base
+    # working_dir: /home
+    working_dir: /flask_base
+    tty:  true
+    ports:
+      - "7777:7777"
+      - "5000:5000"
+    # command: python run.py
 
   nginx:
     container_name: nginx
