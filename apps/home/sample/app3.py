@@ -11,6 +11,8 @@ bp = Blueprint('sample_app3', __name__)
 @bp.route('/sample_app3', methods=['GET', 'POST'])
 def sample_app3():
     
+    segment = "sample_app3"
+    
     form_data_path = "apps/static/assets/data/form_data.csv"
     df_form = pd.read_csv(form_data_path, index_col=0)
     
@@ -29,4 +31,4 @@ def sample_app3():
     pprint.pprint(dict_list_form)
     # name = request.form['name']
         
-    return render_template('sample/app3.html', dict_list_form=dict_list_form)
+    return render_template('sample/app3.html', dict_list_form=dict_list_form, segment=segment)
