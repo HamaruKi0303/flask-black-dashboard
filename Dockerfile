@@ -22,9 +22,13 @@ COPY env.sample .env
 
 COPY . .
 
-RUN flask db init
-RUN flask db migrate
-RUN flask db upgrade
+# RUN flask db init
+# RUN flask db migrate
+# RUN flask db upgrade
+
+# install pip utils
+RUN pip install loguru \
+                pandas
 
 # gunicorn
 # CMD ["gunicorn", "--config", "gunicorn-cfg.py", "run:app"]
