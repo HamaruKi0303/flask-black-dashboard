@@ -1,6 +1,7 @@
 
 # FLASK dashboard
 
+![](https://i.imgur.com/SsY476Z.png)
 
 # Index
 
@@ -26,7 +27,8 @@
 
 
 ## 2. Updates!!
-* 【2022/12/06】[元のサイト](https://github.com/app-generator/flask-black-dashboard)のフォーク & base `README.md` の追加
+* 【2022/12/05】[元のサイト](https://github.com/app-generator/flask-black-dashboard)のフォーク & base `README.md` の追加
+* 【2022/12/07】[サンプルサイト](#6-sample-site)：app1~app5を作成
 
 ## 3. Coming soon
 - [ ] BPサンプルサイトの追加
@@ -35,7 +37,7 @@
 
 ### 4.1. ✨ Start the app in Docker
 
-> 👉 **Step 1** - Download the code from the GH repository (using `GIT`) 
+> 👉 **Step 1** - ソースコードをダウンロードします．
 
 ```bash
 $ git clone https://github.com/app-generator/flask-black-dashboard.git
@@ -44,13 +46,16 @@ $ cd flask-black-dashboard
 
 <br />
 
-> 👉 **Step 2** - Start the APP in `Docker`
+> 👉 **Step 2** - `Docker`を起動します．
 
 ```bash
 $ docker-compose up --build 
 ```
 
-Visit `http://localhost:5085` in your browser. The app should be up & running.
+`http://localhost::7777` にアクセスするとダッシュボードの画面が確認できます．
+
+![](https://i.imgur.com/SsY476Z.png)
+
 
 ## 5. Detail
 
@@ -165,6 +170,8 @@ def sample_app2():
 
 ### 6.3. POST page
 
+POSTでやり取りをします．入力フォームのデータをCSVに保存し，テーブルで表示します．
+
 `apps\home\sample\app3.py`
 
 ```python
@@ -181,20 +188,25 @@ bp = Blueprint('sample_app3', __name__)
 @bp.route('/sample_app3', methods=['GET', 'POST'])
 def sample_app3():
     
+    # データの保存 path
     form_data_path = "apps/static/assets/data/form_data.csv"
     df_form = pd.read_csv(form_data_path, index_col=0)
     
     # POSTメソッドの場合
     if request.method == 'POST':
 
+        # Dict に変換
         dict_form = request.form.to_dict()
+        # データフレームに追加
         df_form = df_form.append(dict_form, ignore_index=True)
         
         logger.info("df_form")
+        # CSVで保存
         df_form.to_csv(form_data_path)
         pprint.pprint(df_form)
         
         logger.info("dict_list_form")
+        # データフレームを Dict に変換
         dict_list_form = df_form.to_dict('records')
         pprint.pprint(dict_list_form)
         # name = request.form['name']
@@ -209,12 +221,77 @@ def sample_app3():
 
 ### 6.4. Active sidebar
 
+サイドバーにアクティブのマークを付けます．
+
+`segment`でページのタイトルを送ります．
+
 `apps\home\sample\app4.py`
+
+```python
+from flask import Flask, render_template, url_for, request, redirect, Blueprint
+from datetime import datetime
+
+import pandas as pd
+import pprint
+from loguru import logger
+# Blueprint を作成
+bp = Blueprint('sample_app4', __name__)
+
+# /post にアクセスされ、GETもしくはPOSTメソッドでデータが送信された場合の処理
+@bp.route('/sample_app4', methods=['GET', 'POST'])
+def sample_app4():
+    
+    segment = "sample_app4"
+    
+    form_data_path = "apps/static/assets/data/form_data.csv"
+    df_form = pd.read_csv(form_data_path, index_col=0)
+    
+    # POSTメソッドの場合
+    if request.method == 'POST':
+
+        dict_form = request.form.to_dict()
+        df_form = df_form.append(dict_form, ignore_index=True)
+        
+        logger.info("df_form")
+        df_form.to_csv(form_data_path)
+        pprint.pprint(df_form)
+        
+    logger.info("dict_list_form")
+    dict_list_form = df_form.to_dict('records')
+    pprint.pprint(dict_list_form)
+    # name = request.form['name']
+    
+    return render_template('sample/app3.html', 
+                            dict_list_form=dict_list_form, 
+                            segment=segment)
+```
+
+送信した`segment`を`HTML`側で受け取ってアクティブにします．
+
+`apps\templates\includes\sidebar.html`
+
+```html
+
+...
+
+                <li class="{% if 'sample_app4' in segment %} active {% endif %}">
+                    <a href="/sample_app4">
+                        <i class="tim-icons icon-spaceship"></i>
+                        <p>Sample4</p>
+                    </a>
+                </li>
+...
+
+```
+👇サイト
+> http://192.168.0.100:7777/sample_app4
 
 ![](https://i.imgur.com/DPA1UEF.png)
 
 
 ### 6.5. Switch sidebar
+
+開発用と本番用でサイドバーを切り替えます．
 
 `apps\home\sample\app5.py`
 
