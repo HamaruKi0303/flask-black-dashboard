@@ -5,13 +5,13 @@ import pandas as pd
 import pprint
 from loguru import logger
 # Blueprint を作成
-bp = Blueprint('sample_app3', __name__)
+bp = Blueprint('sample_app4', __name__)
 
 # /post にアクセスされ、GETもしくはPOSTメソッドでデータが送信された場合の処理
-@bp.route('/sample_app3', methods=['GET', 'POST'])
-def sample_app3():
+@bp.route('/sample_app4', methods=['GET', 'POST'])
+def sample_app4():
     
-    segment = "sample_app3"
+    segment = "sample_app4"
     
     form_data_path = "apps/static/assets/data/form_data.csv"
     df_form = pd.read_csv(form_data_path, index_col=0)
