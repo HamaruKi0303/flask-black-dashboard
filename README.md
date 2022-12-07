@@ -63,7 +63,6 @@ $ docker-compose up --build
 
 ### 5.1. ✨ フォルダ構成
 
-The project is coded using blueprints, app factory pattern, dual configuration profile (development and production) and an intuitive structure presented bellow:
 
 ```bash
 < PROJECT ROOT >
