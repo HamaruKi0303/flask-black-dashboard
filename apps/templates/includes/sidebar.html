@@ -50,7 +50,12 @@
                         <p>Sample5</p>
                     </a>
                 </li>
-                
+                <li class="{% if 'sample_app6' in segment %} active {% endif %}">
+                    <a href="/sample_app6">
+                        <i class="tim-icons icon-spaceship"></i>
+                        <p>Sample6</p>
+                    </a>
+                </li>
                 {% if 'master' in running_type  %}
 
                 {% else %}

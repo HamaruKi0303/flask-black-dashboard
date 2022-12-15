@@ -18,6 +18,7 @@
   - [6.3. POST page](#63-post-page)
   - [6.4. Active sidebar](#64-active-sidebar)
   - [6.5. Switch sidebar](#65-switch-sidebar)
+  - [6.5. Simple progress bar](#65-simple-progress-bar)
 - [7. Reference site](#7-reference-site)
 - [8. memo](#8-memo)
 
@@ -29,11 +30,13 @@
 
 このサンプルサイトを複製し，元にすれば開発効率がアップすること間違いなしです．
 
+https://github.com/HamaruKi0303/flask-black-dashboard
 
 ## 2. Updates!!
 * 【2022/12/05】[元のサイト](https://github.com/app-generator/flask-black-dashboard)のフォーク & base `README.md` の追加
 * 【2022/12/07】[サンプルサイト](#6-sample-site)：app1~app5を作成
-
+* 【2022/12/15】[Simple progress bar](#6-sample-site)：app6を作成
+* 
 ## 3. Coming soon
 - [ ] BPサンプルサイトの追加
 
@@ -41,7 +44,7 @@
 
 ### 4.1. ✨ Start the app in Docker
 
-> 👉 **Step 1** - ソースコードをダウンロードします．
+👉 **Step 1** - ソースコードをダウンロードします．
 
 ```bash
 $ git clone https://github.com/app-generator/flask-black-dashboard.git
@@ -50,7 +53,7 @@ $ cd flask-black-dashboard
 
 <br />
 
-> 👉 **Step 2** - `Docker`を起動します．
+👉 **Step 2** - `Docker`を起動します．
 
 ```bash
 $ docker-compose up --build 
@@ -136,10 +139,6 @@ bp = Blueprint('sample_app1', __name__)
 def sample_app1():
     return '!!  sample_app1  !!'
 ```
-
-
-
-
 
 
 👇サイト
@@ -382,6 +381,140 @@ def sample_app5():
 > http://192.168.0.100:7777/sample_app5
 
 ![](https://i.imgur.com/6wIjjec.png)
+
+
+
+### 6.5. Simple progress bar
+
+シンプルな構成でプログレスバーを作成します．
+
+処理している関数側で進捗状況を`Queue`に送信します．これをストリームが受け取ります．
+
+`apps\home\sample\app6.py`
+
+```python
+from flask import Flask, render_template, url_for, request, redirect, Blueprint
+from datetime import datetime
+
+from flask import Flask, Response, request, jsonify, render_template
+from queue import Queue
+import time
+import datetime
+import json
+
+import pandas as pd
+import pprint
+from loguru import logger
+# Blueprint を作成
+bp = Blueprint('sample_app6', __name__)
+
+# 進捗パーセンテージ用キュー
+queue = Queue()
+
+# プログレスバーストリーム
+@bp.route('/stream')
+def stream():
+    return Response(event_stream(queue), mimetype='text/event-stream')
+
+# Queueの値を取り出してEventSourceの'progress-item'に出力（100だったら'last-item'イベントに出力）
+def event_stream(queue):
+    while True:
+        persent = queue.get(True)
+        logger.info("progress : {}%".format(persent))
+
+        sse_event = 'progress-item'
+        if persent == 100:
+            sse_event = 'last-item'
+        yield "event:{event}\ndata:{data}\n\n".format(event=sse_event, data=persent)
+
+# /post にアクセスされ、GETもしくはPOSTメソッドでデータが送信された場合の処理
+@bp.route('/sample_app6', methods=['GET', 'POST'])
+def sample_app6():
+    
+    segment = "sample_app6"
+    # running_type = "develop"
+    running_type = "master"
+    
+    start = datetime.datetime.now()
+    dict_form = request.form.to_dict()
+    
+    # POSTメソッドの場合
+    if request.method == 'POST':
+
+        # サンプル用ループ処理（2秒ごとに10パーセントづつ進行）
+        for i in range(10,110,10):
+            queue.put(i)
+            time.sleep(3)
+            
+    end = datetime.datetime.now()
+    elapsed_time = str(end - start)
+    
+    dict_form["elapsed_time"] = elapsed_time
+    logger.info("dict_list_form")
+        
+    return render_template('sample/app6.html', 
+                            dict_form=dict_form, 
+                            segment=segment, 
+                            running_type=running_type)
+```
+
+進捗状況をストリームが受け取ると`Response`でサイトに返すと`addEventListener`によりプログレスバーが進捗状況に合わせて変更される仕組みです．
+
+`apps\templates\sample\app6.html`
+
+```html
+
+...
+
+
+                    <!-- POST フォーム -->
+                    <form action="/sample_app6" method="post">
+                        <!-- 処理開始ボタン -->
+                        <div class="card-footer text-center">
+                            <button type="submit" class="btn btn-fill btn-primary">Start processing</button>
+                        </div>
+                    </form>
+
+                    <!-- プログレスバー表示エリア -->
+                    <div class="progress_wrap bg-dark m-5">
+                        <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                            <span class="progress-bar-label mx-2">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- 結果表示エリア -->
+                    <p id="result" class="text-center my-5">経過時間 : {{ dict_form['elapsed_time'] }}</p>
+
+
+
+
+...
+
+<!-- プログレスバーの値の受信 -->
+<script>
+    $(function(){
+        var source = new EventSource("/stream");
+        source.addEventListener('progress-item', function(event){
+            $('.progress-bar').css('width', event.data + '%').attr('aria-valuenow', event.data);
+            $('.progress-bar-label').text(event.data + '%');
+        }, false);
+
+        source.addEventListener('last-item', function(){
+            source.close();
+            $('.progress-bar').css('width', '100%').attr('aria-valuenow', 100);
+            $('.progress-bar-label').text('100%');
+        }, false);
+     
+    });
+    </script>
+
+...
+
+```
+👇サイト
+> http://192.168.0.100:7777/sample_app6
+
+![](https://i.imgur.com/062jQJQ.png)
 
 ## 7. Reference site
 
