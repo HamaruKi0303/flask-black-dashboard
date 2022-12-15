@@ -39,7 +39,7 @@ https://github.com/HamaruKi0303/flask-black-dashboard
 * 【2022/12/15】(#1)[Simple progress bar](#66-simple-progress-bar)：app6を作成
 * 【2022/12/15】(#2)[Add new page](#67-add-new-page)
 ## 3. Coming soon
-- [ ] BPサンプルサイトの追加
+- [ ] グラフの描画
 
 ## 4. Quick Start
 
