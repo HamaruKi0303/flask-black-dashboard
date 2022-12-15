@@ -12,7 +12,7 @@
   - [4.1. ✨ Start the app in Docker](#41--start-the-app-in-docker)
 - [5. Detail](#5-detail)
   - [5.1. ✨ フォルダ構成](#51--フォルダ構成)
-- [6. Sample site](#6-sample-site)
+- [6. Sample basic site](#6-sample-basic-site)
   - [6.1. Simple text page](#61-simple-text-page)
   - [6.2. Simple HTML page](#62-simple-html-page)
   - [6.3. POST page](#63-post-page)
@@ -20,6 +20,8 @@
   - [6.5. Switch sidebar](#65-switch-sidebar)
   - [6.6. Simple progress bar](#66-simple-progress-bar)
   - [6.7. Add new page](#67-add-new-page)
+- [6. Sample chart site](#6-sample-chart-site)
+  - [6.6. Simple chart](#66-simple-chart)
 - [7. Reference site](#7-reference-site)
 - [8. memo](#8-memo)
 
@@ -36,8 +38,8 @@ https://github.com/HamaruKi0303/flask-black-dashboard
 ## 2. Updates!!
 * 【2022/12/05】[元のサイト](https://github.com/app-generator/flask-black-dashboard)のフォーク & base `README.md` の追加
 * 【2022/12/07】[サンプルサイト](#6-sample-site)：app1~app5を作成
-* 【2022/12/15】(#1)[Simple progress bar](#66-simple-progress-bar)：app6を作成
-* 【2022/12/15】(#2)[Add new page](#67-add-new-page)
+* 【2022/12/15】[Simple progress bar](#66-simple-progress-bar)：app6を作成
+* 【2022/12/15】[Add new page](#67-add-new-page)
 ## 3. Coming soon
 - [ ] グラフの描画
 
@@ -121,7 +123,7 @@ $ docker-compose up --build
 
 
 
-## 6. Sample site
+## 6. Sample basic site
 
 機能別に簡易的なページの例を下記に記載します．
 
@@ -598,11 +600,287 @@ def create_app(config):
 ```
 
 
+## 6. Sample chart site
+
+### 6.6. Simple chart
+
+シンプルなグラフを作成します．
+
+デフォルトのダッシュボードの関数を切り出してきて使用しています．
+
+(*数値やラベルは`javascript`で直書きしています)
+
+
+
+`.py`は`HTML`をただ返すだけのシンプルな構成です．
+
+`apps\home\sample\app7.py`
+
+```python
+
+...
+
+# /post にアクセスされ、GETもしくはPOSTメソッドでデータが送信された場合の処理
+@bp.route('/sample_app7', methods=['GET', 'POST'])
+def sample_app7():
+    
+    segment = "sample_app7"
+    # running_type = "develop"
+    running_type = "master"
+    
+    return render_template('sample/app7.html', 
+                            segment=segment, 
+                            running_type=running_type)
+```
+
+
+`apps\templates\sample\app7.html`の`body`は特になにもしていません．ここで指定した`ID`(chartLinePurple, CountryChart)を下記のコードで使用します．
+
+
+```html
+
+...
+
+
+        <!-- chartLinePurple  -->
+        <div class="col-12">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h5 class="card-category">Sample chart</h5>
+                    <h2 class="card-title">ID : chartLinePurple</h2>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="chartLinePurple"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- CountryChart  -->
+        <div class="col-12">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h5 class="card-category">Sample bar</h5>
+                    <h2 class="card-title">ID : CountryChart</h2>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="CountryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+...
+
+
+```
+
+下記のスクリプトを`apps\templates\sample\app7.html`に記載することでチャートが表示されます．
+
+
+
+```html
+
+...
+
+<script>
+
+$(document).ready(function () {
+        // -----------------------------------------------------------
+        // -------------   chartLinePurple   -------------------------
+        // -----------------------------------------------------------
+
+        gradientChartOptionsConfigurationWithTooltipPurple = {
+        maintainAspectRatio: false,
+        legend: {
+            display: false
+        },
+
+        tooltips: {
+            backgroundColor: '#f5f5f5',
+            titleFontColor: '#333',
+            bodyFontColor: '#666',
+            bodySpacing: 4,
+            xPadding: 12,
+            mode: "nearest",
+            intersect: 0,
+            position: "nearest"
+        },
+        responsive: true,
+        scales: {
+            yAxes: [{
+                barPercentage: 1.6,
+                gridLines: {
+                    drawBorder: false,
+                    color: 'rgba(29,140,248,0.0)',
+                    zeroLineColor: "transparent",
+                },
+                ticks: {
+                    suggestedMin: 60,
+                    suggestedMax: 125,
+                    padding: 20,
+                    fontColor: "#9a9a9a"
+                }
+            }],
+
+            xAxes: [{
+                barPercentage: 1.6,
+                gridLines: {
+                    drawBorder: false,
+                    color: 'rgba(225,78,202,0.1)',
+                    zeroLineColor: "transparent",
+                },
+                ticks: {
+                    padding: 20,
+                    fontColor: "#9a9a9a"
+                }
+            }]
+        }
+        };
+
+
+        var ctx = document.getElementById("chartLinePurple").getContext("2d");
+
+        var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+        gradientStroke.addColorStop(1, 'rgba(72,72,176,0.2)');
+        gradientStroke.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+        gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
+
+        var data = {
+        labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+        datasets: [{
+            label: "Data",
+            fill: true,
+            backgroundColor: gradientStroke,
+            borderColor: '#d048b6',
+            borderWidth: 2,
+            borderDash: [],
+            borderDashOffset: 0.0,
+            pointBackgroundColor: '#d048b6',
+            pointBorderColor: 'rgba(255,255,255,0)',
+            pointHoverBackgroundColor: '#d048b6',
+            pointBorderWidth: 20,
+            pointHoverRadius: 4,
+            pointHoverBorderWidth: 15,
+            pointRadius: 4,
+            data: [80, 100, 70, 80, 120, 80],
+        }]
+        };
+
+        var myChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: gradientChartOptionsConfigurationWithTooltipPurple
+        });
+
+        // -----------------------------------------------------------
+        // -------------   CountryChart   ----------------------------
+        // -----------------------------------------------------------
+
+        gradientBarChartConfiguration = {
+        maintainAspectRatio: false,
+        legend: {
+            display: false
+        },
+
+        tooltips: {
+            backgroundColor: '#f5f5f5',
+            titleFontColor: '#333',
+            bodyFontColor: '#666',
+            bodySpacing: 4,
+            xPadding: 12,
+            mode: "nearest",
+            intersect: 0,
+            position: "nearest"
+        },
+        responsive: true,
+        scales: {
+            yAxes: [{
+
+            gridLines: {
+                drawBorder: false,
+                color: 'rgba(29,140,248,0.1)',
+                zeroLineColor: "transparent",
+            },
+            ticks: {
+                suggestedMin: 60,
+                suggestedMax: 120,
+                padding: 20,
+                fontColor: "#9e9e9e"
+            }
+            }],
+
+            xAxes: [{
+
+            gridLines: {
+                drawBorder: false,
+                color: 'rgba(29,140,248,0.1)',
+                zeroLineColor: "transparent",
+            },
+            ticks: {
+                padding: 20,
+                fontColor: "#9e9e9e"
+            }
+            }]
+        }
+        };
+
+
+        var ctx = document.getElementById("CountryChart").getContext("2d");
+
+        var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+        gradientStroke.addColorStop(1, 'rgba(29,140,248,0.2)');
+        gradientStroke.addColorStop(0.4, 'rgba(29,140,248,0.0)');
+        gradientStroke.addColorStop(0, 'rgba(29,140,248,0)'); //blue colors
+
+
+        var myChart = new Chart(ctx, {
+        type: 'bar',
+        responsive: true,
+        legend: {
+            display: false
+        },
+        data: {
+            labels: ['USA', 'GER', 'AUS', 'UK', 'RO', 'BR'],
+            datasets: [{
+            label: "Countries",
+            fill: true,
+            backgroundColor: gradientStroke,
+            hoverBackgroundColor: gradientStroke,
+            borderColor: '#1f8ef1',
+            borderWidth: 2,
+            borderDash: [],
+            borderDashOffset: 0.0,
+            data: [53, 20, 10, 80, 100, 45],
+            }]
+        },
+        options: gradientBarChartConfiguration
+        });
+
+
+    });
+
+</script>
+
+...
+
+```
+
+
+👇サイト
+> http://192.168.0.100:7777/sample_app7
+
+![](https://i.imgur.com/ceFrV6c.png)
+
 
 ## 7. Reference site
 
 - [flask-black-dashboard](https://github.com/app-generator/flask-black-dashboard)
-
+- [Flaskで簡易版プログレスバー実装して処理の進捗見れるようにしてやんよ!!!](https://tokidoki-web.com/2020/02/flask%E3%81%A7%E7%B0%A1%E6%98%93%E7%89%88%E3%83%97%E3%83%AD%E3%82%B0%E3%83%AC%E3%82%B9%E3%83%90%E3%83%BC%E5%AE%9F%E8%A3%85%E3%81%97%E3%81%A6%E5%87%A6%E7%90%86%E3%81%AE%E9%80%B2%E6%8D%97%E8%A6%8B/)
 ## 8. memo
 
 ```bash
