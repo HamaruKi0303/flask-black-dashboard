@@ -18,7 +18,8 @@
   - [6.3. POST page](#63-post-page)
   - [6.4. Active sidebar](#64-active-sidebar)
   - [6.5. Switch sidebar](#65-switch-sidebar)
-  - [6.5. Simple progress bar](#65-simple-progress-bar)
+  - [6.6. Simple progress bar](#66-simple-progress-bar)
+  - [6.7. Add new page](#67-add-new-page)
 - [7. Reference site](#7-reference-site)
 - [8. memo](#8-memo)
 
@@ -35,8 +36,8 @@ https://github.com/HamaruKi0303/flask-black-dashboard
 ## 2. Updates!!
 * 【2022/12/05】[元のサイト](https://github.com/app-generator/flask-black-dashboard)のフォーク & base `README.md` の追加
 * 【2022/12/07】[サンプルサイト](#6-sample-site)：app1~app5を作成
-* 【2022/12/15】[Simple progress bar](#6-sample-site)：app6を作成
-* 
+* 【2022/12/15】(#1)[Simple progress bar](#66-simple-progress-bar)：app6を作成
+* 【2022/12/15】(#2)[Add new page](#67-add-new-page)
 ## 3. Coming soon
 - [ ] BPサンプルサイトの追加
 
@@ -384,7 +385,7 @@ def sample_app5():
 
 
 
-### 6.5. Simple progress bar
+### 6.6. Simple progress bar
 
 シンプルな構成でプログレスバーを作成します．
 
@@ -515,6 +516,88 @@ def sample_app6():
 > http://192.168.0.100:7777/sample_app6
 
 ![](https://i.imgur.com/062jQJQ.png)
+
+
+
+### 6.7. Add new page
+
+新しいページの追加方法です．
+
+
+**Step1 : ファイルの作成**
+
+`.py`と`.html`ファイルを作成しておきます．ここでは`app6`を例にして説明をします．
+
+![](https://i.imgur.com/4Ls8nGr.png)
+
+**Step2 : パスの追加**
+
+下記のファイルに作成した`.py`ファイルと関連付けをします．
+`apps\__init__.py`
+
+```python
+# -*- encoding: utf-8 -*-
+"""
+Copyright (c) 2019 - present AppSeed.us
+"""
+
+．．．
+
+
+# ----------------------------------------
+# my bp site 
+#
+from apps.home.sample.app1 import bp as sample_app1
+from apps.home.sample.app2 import bp as sample_app2
+from apps.home.sample.app3 import bp as sample_app3
+from apps.home.sample.app4 import bp as sample_app4
+from apps.home.sample.app5 import bp as sample_app5
+from apps.home.sample.app6 import bp as sample_app6
+
+
+．．．
+
+
+def create_app(config):
+
+    ．．．
+
+    
+    # regit sample site 
+    app.register_blueprint(sample_app1)
+    app.register_blueprint(sample_app2)
+    app.register_blueprint(sample_app3)
+    app.register_blueprint(sample_app4)
+    app.register_blueprint(sample_app5)
+    app.register_blueprint(sample_app6)
+    
+    configure_database(app)
+    return app
+
+```
+
+**Step3 : サイドバーへの追加**
+
+
+下記のファイルに`segment`の名前と`/sample_app6`を編集して完了です．
+
+`apps\templates\includes\sidebar.html`
+
+
+```html
+
+...
+                <li class="{% if 'sample_app6' in segment %} active {% endif %}">
+                    <a href="/sample_app6">
+                        <i class="tim-icons icon-spaceship"></i>
+                        <p>Sample6</p>
+                    </a>
+                </li>
+...
+
+```
+
+
 
 ## 7. Reference site
 
