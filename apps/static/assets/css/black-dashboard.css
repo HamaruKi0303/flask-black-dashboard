@@ -9175,7 +9175,7 @@ fieldset[disabled]
 
 .btn-secondary:not(:disabled):not(.disabled):active, .btn-secondary:not(:disabled):not(.disabled).active,
 .show > .btn-secondary.dropdown-toggle {
-  color: #ffffff; }
+  color: #e14eca; }
 
 .btn-group label.btn.active {
   transform: translateY(0);
