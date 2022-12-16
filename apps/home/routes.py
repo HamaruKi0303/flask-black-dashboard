@@ -24,7 +24,7 @@ def route_template(template):
 
         if not template.endswith('.html'):
             template += '.html'
-
+            
         # Detect the current page
         segment = get_segment(request)
         logger.info("segment:{}".format(segment))

@@ -3,19 +3,23 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+# from apps.authentication.oauth import github_blueprint
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from importlib import import_module
 
 # ----------------------------------------
-# my bp site 
+# my bp site
 #
 from apps.home.sample.app1 import bp as sample_app1
 from apps.home.sample.app2 import bp as sample_app2
 from apps.home.sample.app3 import bp as sample_app3
 from apps.home.sample.app4 import bp as sample_app4
 from apps.home.sample.app5 import bp as sample_app5
+from apps.home.sample.app6 import bp as sample_app6
+from apps.home.sample.app7 import bp as sample_app7
+from apps.home.sample.app8 import bp as sample_app8
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -51,13 +55,16 @@ def create_app(config):
 
     app.register_blueprint(github_blueprint, url_prefix="/login")
     register_blueprints(app)
-    
-    # regit sample site 
+
+    # regit sample site
     app.register_blueprint(sample_app1)
     app.register_blueprint(sample_app2)
     app.register_blueprint(sample_app3)
     app.register_blueprint(sample_app4)
     app.register_blueprint(sample_app5)
-    
+    app.register_blueprint(sample_app6)
+    app.register_blueprint(sample_app7)
+    app.register_blueprint(sample_app8)
+
     configure_database(app)
     return app

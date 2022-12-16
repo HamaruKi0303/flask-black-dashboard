@@ -12,12 +12,16 @@
   - [4.1. ✨ Start the app in Docker](#41--start-the-app-in-docker)
 - [5. Detail](#5-detail)
   - [5.1. ✨ フォルダ構成](#51--フォルダ構成)
-- [6. Sample site](#6-sample-site)
+- [6. Sample basic site](#6-sample-basic-site)
   - [6.1. Simple text page](#61-simple-text-page)
   - [6.2. Simple HTML page](#62-simple-html-page)
   - [6.3. POST page](#63-post-page)
   - [6.4. Active sidebar](#64-active-sidebar)
   - [6.5. Switch sidebar](#65-switch-sidebar)
+  - [6.6. Simple progress bar](#66-simple-progress-bar)
+  - [6.7. Add new page](#67-add-new-page)
+- [6. Sample chart site](#6-sample-chart-site)
+  - [6.6. Simple chart](#66-simple-chart)
 - [7. Reference site](#7-reference-site)
 - [8. memo](#8-memo)
 
@@ -29,19 +33,21 @@
 
 このサンプルサイトを複製し，元にすれば開発効率がアップすること間違いなしです．
 
+https://github.com/HamaruKi0303/flask-black-dashboard
 
 ## 2. Updates!!
 * 【2022/12/05】[元のサイト](https://github.com/app-generator/flask-black-dashboard)のフォーク & base `README.md` の追加
 * 【2022/12/07】[サンプルサイト](#6-sample-site)：app1~app5を作成
-
+* 【2022/12/15】[Simple progress bar](#66-simple-progress-bar)：app6を作成
+* 【2022/12/15】[Add new page](#67-add-new-page)
 ## 3. Coming soon
-- [ ] BPサンプルサイトの追加
+- [ ] グラフの描画
 
 ## 4. Quick Start
 
 ### 4.1. ✨ Start the app in Docker
 
-> 👉 **Step 1** - ソースコードをダウンロードします．
+👉 **Step 1** - ソースコードをダウンロードします．
 
 ```bash
 $ git clone https://github.com/app-generator/flask-black-dashboard.git
@@ -50,7 +56,7 @@ $ cd flask-black-dashboard
 
 <br />
 
-> 👉 **Step 2** - `Docker`を起動します．
+👉 **Step 2** - `Docker`を起動します．
 
 ```bash
 $ docker-compose up --build 
@@ -117,7 +123,7 @@ $ docker-compose up --build
 
 
 
-## 6. Sample site
+## 6. Sample basic site
 
 機能別に簡易的なページの例を下記に記載します．
 
@@ -136,10 +142,6 @@ bp = Blueprint('sample_app1', __name__)
 def sample_app1():
     return '!!  sample_app1  !!'
 ```
-
-
-
-
 
 
 👇サイト
@@ -383,10 +385,502 @@ def sample_app5():
 
 ![](https://i.imgur.com/6wIjjec.png)
 
+
+
+### 6.6. Simple progress bar
+
+シンプルな構成でプログレスバーを作成します．
+
+処理している関数側で進捗状況を`Queue`に送信します．これをストリームが受け取ります．
+
+`apps\home\sample\app6.py`
+
+```python
+from flask import Flask, render_template, url_for, request, redirect, Blueprint
+from datetime import datetime
+
+from flask import Flask, Response, request, jsonify, render_template
+from queue import Queue
+import time
+import datetime
+import json
+
+import pandas as pd
+import pprint
+from loguru import logger
+# Blueprint を作成
+bp = Blueprint('sample_app6', __name__)
+
+# 進捗パーセンテージ用キュー
+queue = Queue()
+
+# プログレスバーストリーム
+@bp.route('/stream')
+def stream():
+    return Response(event_stream(queue), mimetype='text/event-stream')
+
+# Queueの値を取り出してEventSourceの'progress-item'に出力（100だったら'last-item'イベントに出力）
+def event_stream(queue):
+    while True:
+        persent = queue.get(True)
+        logger.info("progress : {}%".format(persent))
+
+        sse_event = 'progress-item'
+        if persent == 100:
+            sse_event = 'last-item'
+        yield "event:{event}\ndata:{data}\n\n".format(event=sse_event, data=persent)
+
+# /post にアクセスされ、GETもしくはPOSTメソッドでデータが送信された場合の処理
+@bp.route('/sample_app6', methods=['GET', 'POST'])
+def sample_app6():
+    
+    segment = "sample_app6"
+    # running_type = "develop"
+    running_type = "master"
+    
+    start = datetime.datetime.now()
+    dict_form = request.form.to_dict()
+    
+    # POSTメソッドの場合
+    if request.method == 'POST':
+
+        # サンプル用ループ処理（2秒ごとに10パーセントづつ進行）
+        for i in range(10,110,10):
+            queue.put(i)
+            time.sleep(3)
+            
+    end = datetime.datetime.now()
+    elapsed_time = str(end - start)
+    
+    dict_form["elapsed_time"] = elapsed_time
+    logger.info("dict_list_form")
+        
+    return render_template('sample/app6.html', 
+                            dict_form=dict_form, 
+                            segment=segment, 
+                            running_type=running_type)
+```
+
+進捗状況をストリームが受け取ると`Response`でサイトに返すと`addEventListener`によりプログレスバーが進捗状況に合わせて変更される仕組みです．
+
+`apps\templates\sample\app6.html`
+
+```html
+
+...
+
+
+                    <!-- POST フォーム -->
+                    <form action="/sample_app6" method="post">
+                        <!-- 処理開始ボタン -->
+                        <div class="card-footer text-center">
+                            <button type="submit" class="btn btn-fill btn-primary">Start processing</button>
+                        </div>
+                    </form>
+
+                    <!-- プログレスバー表示エリア -->
+                    <div class="progress_wrap bg-dark m-5">
+                        <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                            <span class="progress-bar-label mx-2">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- 結果表示エリア -->
+                    <p id="result" class="text-center my-5">経過時間 : {{ dict_form['elapsed_time'] }}</p>
+
+
+
+
+...
+
+<!-- プログレスバーの値の受信 -->
+<script>
+    $(function(){
+        var source = new EventSource("/stream");
+        source.addEventListener('progress-item', function(event){
+            $('.progress-bar').css('width', event.data + '%').attr('aria-valuenow', event.data);
+            $('.progress-bar-label').text(event.data + '%');
+        }, false);
+
+        source.addEventListener('last-item', function(){
+            source.close();
+            $('.progress-bar').css('width', '100%').attr('aria-valuenow', 100);
+            $('.progress-bar-label').text('100%');
+        }, false);
+     
+    });
+    </script>
+
+...
+
+```
+👇サイト
+> http://192.168.0.100:7777/sample_app6
+
+![](https://i.imgur.com/062jQJQ.png)
+
+
+
+### 6.7. Add new page
+
+新しいページの追加方法です．
+
+
+**Step1 : ファイルの作成**
+
+`.py`と`.html`ファイルを作成しておきます．ここでは`app6`を例にして説明をします．
+
+![](https://i.imgur.com/4Ls8nGr.png)
+
+**Step2 : パスの追加**
+
+下記のファイルに作成した`.py`ファイルと関連付けをします．
+`apps\__init__.py`
+
+```python
+# -*- encoding: utf-8 -*-
+"""
+Copyright (c) 2019 - present AppSeed.us
+"""
+
+．．．
+
+
+# ----------------------------------------
+# my bp site 
+#
+from apps.home.sample.app1 import bp as sample_app1
+from apps.home.sample.app2 import bp as sample_app2
+from apps.home.sample.app3 import bp as sample_app3
+from apps.home.sample.app4 import bp as sample_app4
+from apps.home.sample.app5 import bp as sample_app5
+from apps.home.sample.app6 import bp as sample_app6
+
+
+．．．
+
+
+def create_app(config):
+
+    ．．．
+
+    
+    # regit sample site 
+    app.register_blueprint(sample_app1)
+    app.register_blueprint(sample_app2)
+    app.register_blueprint(sample_app3)
+    app.register_blueprint(sample_app4)
+    app.register_blueprint(sample_app5)
+    app.register_blueprint(sample_app6)
+    
+    configure_database(app)
+    return app
+
+```
+
+**Step3 : サイドバーへの追加**
+
+
+下記のファイルに`segment`の名前と`/sample_app6`を編集して完了です．
+
+`apps\templates\includes\sidebar.html`
+
+
+```html
+
+...
+                <li class="{% if 'sample_app6' in segment %} active {% endif %}">
+                    <a href="/sample_app6">
+                        <i class="tim-icons icon-spaceship"></i>
+                        <p>Sample6</p>
+                    </a>
+                </li>
+...
+
+```
+
+
+## 6. Sample chart site
+
+### 6.6. Simple chart
+
+シンプルなグラフを作成します．
+
+デフォルトのダッシュボードの関数を切り出してきて使用しています．
+
+(*数値やラベルは`javascript`で直書きしています)
+
+
+
+`.py`は`HTML`をただ返すだけのシンプルな構成です．
+
+`apps\home\sample\app7.py`
+
+```python
+
+...
+
+# /post にアクセスされ、GETもしくはPOSTメソッドでデータが送信された場合の処理
+@bp.route('/sample_app7', methods=['GET', 'POST'])
+def sample_app7():
+    
+    segment = "sample_app7"
+    # running_type = "develop"
+    running_type = "master"
+    
+    return render_template('sample/app7.html', 
+                            segment=segment, 
+                            running_type=running_type)
+```
+
+
+`apps\templates\sample\app7.html`の`body`は特になにもしていません．ここで指定した`ID`(chartLinePurple, CountryChart)を下記のコードで使用します．
+
+
+```html
+
+...
+
+
+        <!-- chartLinePurple  -->
+        <div class="col-12">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h5 class="card-category">Sample chart</h5>
+                    <h2 class="card-title">ID : chartLinePurple</h2>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="chartLinePurple"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- CountryChart  -->
+        <div class="col-12">
+            <div class="card card-chart">
+                <div class="card-header">
+                    <h5 class="card-category">Sample bar</h5>
+                    <h2 class="card-title">ID : CountryChart</h2>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="CountryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+...
+
+
+```
+
+下記のスクリプトを`apps\templates\sample\app7.html`に記載することでチャートが表示されます．
+
+
+
+```html
+
+...
+
+<script>
+
+$(document).ready(function () {
+        // -----------------------------------------------------------
+        // -------------   chartLinePurple   -------------------------
+        // -----------------------------------------------------------
+
+        gradientChartOptionsConfigurationWithTooltipPurple = {
+        maintainAspectRatio: false,
+        legend: {
+            display: false
+        },
+
+        tooltips: {
+            backgroundColor: '#f5f5f5',
+            titleFontColor: '#333',
+            bodyFontColor: '#666',
+            bodySpacing: 4,
+            xPadding: 12,
+            mode: "nearest",
+            intersect: 0,
+            position: "nearest"
+        },
+        responsive: true,
+        scales: {
+            yAxes: [{
+                barPercentage: 1.6,
+                gridLines: {
+                    drawBorder: false,
+                    color: 'rgba(29,140,248,0.0)',
+                    zeroLineColor: "transparent",
+                },
+                ticks: {
+                    suggestedMin: 60,
+                    suggestedMax: 125,
+                    padding: 20,
+                    fontColor: "#9a9a9a"
+                }
+            }],
+
+            xAxes: [{
+                barPercentage: 1.6,
+                gridLines: {
+                    drawBorder: false,
+                    color: 'rgba(225,78,202,0.1)',
+                    zeroLineColor: "transparent",
+                },
+                ticks: {
+                    padding: 20,
+                    fontColor: "#9a9a9a"
+                }
+            }]
+        }
+        };
+
+
+        var ctx = document.getElementById("chartLinePurple").getContext("2d");
+
+        var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+        gradientStroke.addColorStop(1, 'rgba(72,72,176,0.2)');
+        gradientStroke.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+        gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
+
+        var data = {
+        labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+        datasets: [{
+            label: "Data",
+            fill: true,
+            backgroundColor: gradientStroke,
+            borderColor: '#d048b6',
+            borderWidth: 2,
+            borderDash: [],
+            borderDashOffset: 0.0,
+            pointBackgroundColor: '#d048b6',
+            pointBorderColor: 'rgba(255,255,255,0)',
+            pointHoverBackgroundColor: '#d048b6',
+            pointBorderWidth: 20,
+            pointHoverRadius: 4,
+            pointHoverBorderWidth: 15,
+            pointRadius: 4,
+            data: [80, 100, 70, 80, 120, 80],
+        }]
+        };
+
+        var myChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: gradientChartOptionsConfigurationWithTooltipPurple
+        });
+
+        // -----------------------------------------------------------
+        // -------------   CountryChart   ----------------------------
+        // -----------------------------------------------------------
+
+        gradientBarChartConfiguration = {
+        maintainAspectRatio: false,
+        legend: {
+            display: false
+        },
+
+        tooltips: {
+            backgroundColor: '#f5f5f5',
+            titleFontColor: '#333',
+            bodyFontColor: '#666',
+            bodySpacing: 4,
+            xPadding: 12,
+            mode: "nearest",
+            intersect: 0,
+            position: "nearest"
+        },
+        responsive: true,
+        scales: {
+            yAxes: [{
+
+            gridLines: {
+                drawBorder: false,
+                color: 'rgba(29,140,248,0.1)',
+                zeroLineColor: "transparent",
+            },
+            ticks: {
+                suggestedMin: 60,
+                suggestedMax: 120,
+                padding: 20,
+                fontColor: "#9e9e9e"
+            }
+            }],
+
+            xAxes: [{
+
+            gridLines: {
+                drawBorder: false,
+                color: 'rgba(29,140,248,0.1)',
+                zeroLineColor: "transparent",
+            },
+            ticks: {
+                padding: 20,
+                fontColor: "#9e9e9e"
+            }
+            }]
+        }
+        };
+
+
+        var ctx = document.getElementById("CountryChart").getContext("2d");
+
+        var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+        gradientStroke.addColorStop(1, 'rgba(29,140,248,0.2)');
+        gradientStroke.addColorStop(0.4, 'rgba(29,140,248,0.0)');
+        gradientStroke.addColorStop(0, 'rgba(29,140,248,0)'); //blue colors
+
+
+        var myChart = new Chart(ctx, {
+        type: 'bar',
+        responsive: true,
+        legend: {
+            display: false
+        },
+        data: {
+            labels: ['USA', 'GER', 'AUS', 'UK', 'RO', 'BR'],
+            datasets: [{
+            label: "Countries",
+            fill: true,
+            backgroundColor: gradientStroke,
+            hoverBackgroundColor: gradientStroke,
+            borderColor: '#1f8ef1',
+            borderWidth: 2,
+            borderDash: [],
+            borderDashOffset: 0.0,
+            data: [53, 20, 10, 80, 100, 45],
+            }]
+        },
+        options: gradientBarChartConfiguration
+        });
+
+
+    });
+
+</script>
+
+...
+
+```
+
+
+👇サイト
+> http://192.168.0.100:7777/sample_app7
+
+![](https://i.imgur.com/ceFrV6c.png)
+
+
 ## 7. Reference site
 
 - [flask-black-dashboard](https://github.com/app-generator/flask-black-dashboard)
-
+- [Flaskで簡易版プログレスバー実装して処理の進捗見れるようにしてやんよ!!!](https://tokidoki-web.com/2020/02/flask%E3%81%A7%E7%B0%A1%E6%98%93%E7%89%88%E3%83%97%E3%83%AD%E3%82%B0%E3%83%AC%E3%82%B9%E3%83%90%E3%83%BC%E5%AE%9F%E8%A3%85%E3%81%97%E3%81%A6%E5%87%A6%E7%90%86%E3%81%AE%E9%80%B2%E6%8D%97%E8%A6%8B/)
 ## 8. memo
 
 ```bash
