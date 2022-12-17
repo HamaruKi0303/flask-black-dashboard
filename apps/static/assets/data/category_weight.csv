@@ -1,3 +1,14 @@
 ﻿name,first,step_size,step_num,try_num
 Abdominal-Crunch,5,5,9,15
-Triceps extension,5,5,9,15
+Triceps-extension,5,5,9,15
+Biceps-curl,4,7,9,15
+Lateral-noise,5,5,9,15
+Shoulder-press,5,5,9,15
+Chest-press,5,5,9,15
+Pectoral-fly,5,7,9,15
+Hip-abductor,67.5,5,9,15
+Seated-leg-press,5,10,9,15
+Leg-extension,5,7,9,15
+Low-Low,10,10,9,15
+Pull-down,5,7,9,15
+Torso-rotation,10,7,9,15
