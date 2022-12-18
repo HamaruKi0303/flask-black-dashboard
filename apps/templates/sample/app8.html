@@ -9,69 +9,97 @@
 
 
 <div class="content">
-    <div
 
-        {% for dict in dict_list_form %}
-            <div class="col-lg-12 col-md-12">
-                <div class="card ">
-                    <div class="card-header">
-                        <h4 class="card-title"> {{dict["name"]}}</h4>
-                    </div>
-                    
-                    <form action="/sample_app8" method="post">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table tablesorter " id="">
-                                    <thead class=" text-primary">
+    <div class="col-md-12">
+        <div class="card  card-plain">
+            <div class="card-header">
+                <h4 class="card-title">Index</h4>
+                <p class="category">shortcut link</p>
+            </div>
+        <div class="card-body">
+        <div class="table-responsive">
+            <table class="table tablesorter " id="">
+            <thead class=" text-primary">
+                <tr>
+                <th>
+                    Name
+                </th>
+            </thead>
+            <tbody>
+                {% for dict in dict_list_form %}
+                    <tr>
+                        <td>
+                            
+                            <a href=#{{dict["name"]}}>{{dict["name"]}}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% for dict in dict_list_form %}
+        <div class="col-lg-12 col-md-12">
+            <div class="card ">
+                <div class="card-header">
+                    <h4 class="card-title"> {{dict["name"]}}</h4>
+                </div>
+                
+                <form action="/sample_app8" method="post">
+                    <div class="card-body" id={{dict["name"]}}>
+                        <div class="table-responsive">
+                            <table class="table tablesorter " id="">
+                                <thead class=" text-primary">
+                                <tr>
+                                    <th class="text-center">
+                                        Weight
+                                    </th>
+                                    <th class="text-center">
+                                        Mean
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for i in range(dict["try-num"]) %}
                                     <tr>
-                                        <th class="text-center">
-                                            Weight
-                                        </th>
-                                        <th class="text-center">
-                                            Mean
-                                        </th>
+                                        <td>
+                                            <center>{{i+1}}<br>
+                                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                {% for j in range(1,dict["step-num"]) %}
+                                                    <label class="btn btn-secondary"
+                                                            style="padding-left: 21px;padding-right: 21px;">
+                                                        <input type="radio" 
+                                                                name={{dict["name"]}}_{{i+1}}
+                                                                id={{dict["name"]}}_{{i+1}}_{{j+1}} 
+                                                                autocomplete="off" 
+                                                                value={{dict[j|string]}}> {{dict[j|string]}}
+                                                    </label>
+                                                {% endfor %}
+                                            </div>
+                                            </center>
+                                        </td>
+                                        <td class="text-center">
+                                            $36,738
+                                        </td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
+                                {% endfor %}
 
-                                    {% for i in range(dict["try-num"]) %}
-                                        <tr>
-                                            <td>
-                                                <center>{{i+1}}<br>
-                                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                                    {% for j in range(1,dict["step-num"]) %}
-                                                        <label class="btn btn-secondary"
-                                                                style="padding-left: 21px;padding-right: 21px;">
-                                                            <input type="radio" 
-                                                                    name={{dict["name"]}}_{{i+1}}
-                                                                    id={{dict["name"]}}_{{i+1}}_{{j+1}} 
-                                                                    autocomplete="off" 
-                                                                    value={{dict[j|string]}}> {{dict[j|string]}}
-                                                        </label>
-                                                    {% endfor %}
-                                                </div>
-                                                </center>
-                                            </td>
-                                            <td class="text-center">
-                                                $36,738
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
+                                </tbody>
+                            </table>
 
-                                    </tbody>
-                                </table>
-
-                                <!-- 処理開始ボタン -->
-                                <div class="card-footer text-center">
-                                    <button type="submit" class="btn btn-fill btn-primary">Complete</button>
-                                </div>
+                            <!-- 処理開始ボタン -->
+                            <div class="card-footer text-center">
+                                <button type="submit" class="btn btn-fill btn-primary">Complete</button>
                             </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
-        {% endfor %}
-    </div>
+        </div>
+    {% endfor %}
+
 
 </div>
 
