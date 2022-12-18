@@ -15,17 +15,17 @@ import pandas as pd
 import pprint
 from loguru import logger
 # Blueprint を作成
-bp = Blueprint('sample_app8', __name__)
+bp = Blueprint('sample_app10', __name__)
 
 
 # /post にアクセスされ、GETもしくはPOSTメソッドでデータが送信された場合の処理
-@bp.route('/sample_app8', methods=['GET', 'POST'])
-def sample_app8():
+@bp.route('/sample_app10', methods=['GET', 'POST'])
+def sample_app10():
     
     # --------------------------------------------
     # param
     #
-    segment         = "sample_app8"
+    segment         = "sample_app10"
     # running_type = "develop"
     running_type    = "master"
     flask_data      = "apps/static/assets/data"
@@ -40,40 +40,28 @@ def sample_app8():
     os.makedirs(log_dir_path, exist_ok=True)
     log_file_path = "{}/{}.json".format(log_dir_path, tstr_min)
     
-
-    # --------------------------------------------
-    # request to dict
-    #
-    dict_form = request.form.to_dict()
-    dict_form["tstr-day"] = tstr_day
-    dict_form["tstr-min"] = tstr_min
-    logger.info("dict_form : {}".format(dict_form))
-    
-    # --------------------------------------------
-    # detect weight key
-    #
-    l_dict_key = list(dict_form.keys())
-    key_weight = [s for s in l_dict_key if '-' in s]
-    logger.info("key_weight : {}".format(key_weight))
-
-    if(key_weight):
-        with open(log_file_path, 'w') as fp:
-            json.dump(dict_form, fp)
-    
     # -------------------------------------
-    # data regit
+    # load weight data
     #
     form_data_path = "apps/static/assets/data/category_weight.csv"
     df_weight_data = pd.read_csv(form_data_path)
-    for i in range(len(df_weight_data)):
-        for j in range(df_weight_data["step-num"][i]):
-            df_weight_data.at[i, '{}'.format(j+1)] = df_weight_data["first"][i] + j*df_weight_data["step-size"][i]
-    
-    
+
+    if request.method == 'POST':
+        # --------------------------------------------
+        # request to dict
+        #
+        dict_form = request.form.to_dict()
+        for k, v in dict_form.items():
+            logger.info("k:{:<30}, v:{:<20}".format(k, v))
+            weight_id, col_name = k.split("_")
+            
+            df_weight_data.loc[(df_weight_data["id"] == int(weight_id)), col_name] = v
+            df_weight_data.to_csv(form_data_path, index=False)
+
     logger.info("df_weight_data : \n{}".format(df_weight_data))
     dict_list_form = df_weight_data.to_dict('records')
     
-    return render_template('sample/app8.html', 
+    return render_template('sample/app10.html', 
                             segment=segment, 
                             dict_list_form=dict_list_form,
                             running_type=running_type)

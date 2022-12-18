@@ -11,66 +11,106 @@
 <div class="content">
     <div
 
-        {% for dict in dict_list_form %}
-            <div class="col-lg-12 col-md-12">
-                <div class="card ">
-                    <div class="card-header">
-                        <h4 class="card-title"> {{dict["name"]}}</h4>
-                    </div>
-                    
-                    <form action="/sample_app8" method="post">
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table tablesorter " id="">
-                                    <thead class=" text-primary">
+        
+        <div class="col-lg-12 col-md-12">
+            <div class="card ">
+                <div class="card-header">
+                    <h4 class="card-title"> </h4>
+                </div>
+                
+                
+                <form action="/sample_app10" method="post">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table tablesorter " id="">
+                                <thead class=" text-primary">
+                                <tr>
+                                    <th class="text-center">
+                                        ID
+                                    </th>
+                                    <th class="text-center">
+                                        Name
+                                    </th>
+                                    <th class="text-center">
+                                        First weight
+                                    </th>
+                                    <th class="text-center">
+                                        Step size
+                                    </th>
+                                    <th class="text-center">
+                                        Step num
+                                    </th>
+                                    <th class="text-center">
+                                        Try num
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for dict in dict_list_form %}
                                     <tr>
-                                        <th class="text-center">
-                                            Weight
-                                        </th>
-                                        <th class="text-center">
-                                            Mean
-                                        </th>
+                                        <td class="text-center">
+                                            {{dict["id"]}}
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="form-group">
+                                                <input type="text" 
+                                                        class="form-control" 
+                                                        placeholder={{dict["name"]}}
+                                                        id={{dict["id"]}}_name
+                                                        name={{dict["id"]}}_name
+                                                        value={{dict["name"]}}>
+                                        </td>
+                                        </div>
+                                        <td class="text-center">
+                                            <div class="form-group">
+                                                <input type="text" 
+                                                        class="form-control" 
+                                                        placeholder={{dict["first"]}}
+                                                        id={{dict["id"]}}_first
+                                                        name={{dict["id"]}}_first
+                                                        value={{dict["first"]}}>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="text" 
+                                                    class="form-control" 
+                                                    placeholder={{dict["step-size"]}}
+                                                    id={{dict["id"]}}_step-size
+                                                    name={{dict["id"]}}_step-size
+                                                    value={{dict["step-size"]}}>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="text" 
+                                                    class="form-control" 
+                                                    placeholder={{dict["step-num"]}}
+                                                    id={{dict["id"]}}_step-num
+                                                    name={{dict["id"]}}_step-num
+                                                    value={{dict["step-num"]}}>
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="text" 
+                                                    class="form-control" 
+                                                    placeholder={{dict["try-num"]}}
+                                                    id={{dict["id"]}}_try-num
+                                                    name={{dict["id"]}}_try-num
+                                                    value={{dict["try-num"]}}>
+                                        </td>
                                     </tr>
-                                    </thead>
-                                    <tbody>
+                                {% endfor %}
 
-                                    {% for i in range(dict["try-num"]) %}
-                                        <tr>
-                                            <td>
-                                                <center>{{i+1}}<br>
-                                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                                    {% for j in range(1,dict["step-num"]) %}
-                                                        <label class="btn btn-secondary"
-                                                                style="padding-left: 21px;padding-right: 21px;">
-                                                            <input type="radio" 
-                                                                    name={{dict["name"]}}_{{i+1}}
-                                                                    id={{dict["name"]}}_{{i+1}}_{{j+1}} 
-                                                                    autocomplete="off" 
-                                                                    value={{dict[j|string]}}> {{dict[j|string]}}
-                                                        </label>
-                                                    {% endfor %}
-                                                </div>
-                                                </center>
-                                            </td>
-                                            <td class="text-center">
-                                                $36,738
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
 
-                                    </tbody>
-                                </table>
+                                </tbody>
+                            </table>
 
-                                <!-- 処理開始ボタン -->
-                                <div class="card-footer text-center">
-                                    <button type="submit" class="btn btn-fill btn-primary">Complete</button>
-                                </div>
+                            <!-- 処理開始ボタン -->
+                            <div class="card-footer text-center">
+                                <button type="submit" class="btn btn-fill btn-primary">Complete</button>
                             </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
-        {% endfor %}
+        </div>
     </div>
 
 </div>
