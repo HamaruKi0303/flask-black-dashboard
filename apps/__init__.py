@@ -4,6 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 # from apps.authentication.oauth import github_blueprint
+
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -21,6 +22,7 @@ from apps.home.sample.app6 import bp as sample_app6
 from apps.home.sample.app7 import bp as sample_app7
 from apps.home.sample.app8 import bp as sample_app8
 from apps.home.sample.app10 import bp as sample_app10
+from apps.home.sample.app11 import bp as sample_app11
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -47,9 +49,9 @@ def configure_database(app):
     def shutdown_session(exception=None):
         db.session.remove()
 
-from apps.authentication.oauth import github_blueprint
 
 def create_app(config):
+    from apps.authentication.oauth import github_blueprint
     app = Flask(__name__)
     app.config.from_object(config)
     register_extensions(app)
@@ -67,6 +69,7 @@ def create_app(config):
     app.register_blueprint(sample_app7)
     app.register_blueprint(sample_app8)
     app.register_blueprint(sample_app10)
+    app.register_blueprint(sample_app11)
 
     configure_database(app)
     return app
