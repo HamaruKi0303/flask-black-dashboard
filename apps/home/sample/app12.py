@@ -48,56 +48,46 @@ def sample_app12():
         logger.info("{:-^60}".format(section))
         for k, v in config_ini[section].items():
             logger.info("{:<30} :{:<20}".format(k, v))
-            
-    log_file_list = glob.glob(config_ini["FLASK"]["data_root_path"] + "/" + config_ini["LOG"]["root_name"]  + "/**/*.json")
 
-    
+    log_file_list = glob.glob(
+        config_ini["FLASK"]["data_root_path"] + "/" + config_ini["LOG"]["root_name"] + "/**/*.json")
+
     d_log_dat = {}
     c = ['tstr-min', ]
-    df_total = pd.DataFrame(data=None, index=[1], columns=c)
+    df_weight_total = pd.DataFrame(data=None, index=[1], columns=c)
     for i, log_file_path in enumerate(log_file_list):
         with open(log_file_path) as f:
             log_data = json.load(f)
-        
+
         df = pd.DataFrame(data=None, index=[1], columns=c)
         df["tstr-min"] = log_data["tstr-min"]
         df["tstr-day"] = log_data["tstr-day"]
-        
+
         count_list = []
         for k, v in log_data.items():
             logger.info("{:<30} :{:<20}".format(k, v))
-            
+
             split_str = k.split("_")
-            if(len(split_str)>1):
+            if (len(split_str) > 1):
                 weight_name, count = split_str
                 df[str(count)] = v
                 df["weight_name"] = weight_name
-                
-        d_log_dat[log_data["tstr-min"]] = count_list
-        if(i==0):
-            df_total = df
-        else:
-            df_total = pd.concat([df_total, df])
-    
-    df_total = df_total.reset_index(drop=True)
-    print(df_total)
-        
-    # -------------------------------------
-    # load weight data
-    #
-    # form_data_path = "apps/static/assets/data/category_weight.csv"
-    form_data_path = \
-        "{}/{}".format(config_ini["FLASK"]["data_root_path"],
-                        config_ini["WEIGHT"]["category_data_name"])
-    df_weight_data = pd.read_csv(form_data_path)
 
-    # -------------------------------------
-    # Convert dict to records
-    #
-    logger.info("df_weight_data : \n{}".format(df_weight_data))
-    dict_list_form = df_weight_data.to_dict('records')
+        d_log_dat[log_data["tstr-min"]] = count_list
+        if (i == 0):
+            df_weight_total = df
+        else:
+            df_weight_total = pd.concat([df_weight_total, df])
+
+    df_weight_total = df_weight_total.reset_index(drop=True)
+    df_weight_total = df_weight_total.dropna(how='any')
+    print(df_weight_total)
+    df_weight_total.to_csv(config_ini["FLASK"]["data_root_path"] + "/" +
+                           config_ini["WEIGHT"]["merged_data_name"], index=False)
+
+    dict_list_form = df_weight_total.to_dict('records')
 
     return render_template(render_template_path,
-                            segment=segment,
-                            dict_list_form=dict_list_form,
-                            running_type=running_type)
+                           segment=segment,
+                           dict_list_form=dict_list_form,
+                           running_type=running_type)
