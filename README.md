@@ -5,25 +5,27 @@
 
 # Index
 
-- [1. Introduction](#1-introduction)
-- [2. Updates!!](#2-updates)
-- [3. Coming soon](#3-coming-soon)
-- [4. Quick Start](#4-quick-start)
-  - [4.1. ✨ Start the app in Docker](#41--start-the-app-in-docker)
-- [5. Detail](#5-detail)
-  - [5.1. ✨ フォルダ構成](#51--フォルダ構成)
-- [6. Sample basic site](#6-sample-basic-site)
-  - [6.1. Simple text page](#61-simple-text-page)
-  - [6.2. Simple HTML page](#62-simple-html-page)
-  - [6.3. POST page](#63-post-page)
-  - [6.4. Active sidebar](#64-active-sidebar)
-  - [6.5. Switch sidebar](#65-switch-sidebar)
-  - [6.6. Simple progress bar](#66-simple-progress-bar)
-  - [6.7. Add new page](#67-add-new-page)
-- [6. Sample chart site](#6-sample-chart-site)
-  - [6.6. Simple chart](#66-simple-chart)
-- [7. Reference site](#7-reference-site)
-- [8. memo](#8-memo)
+- [FLASK dashboard](#flask-dashboard)
+- [Index](#index)
+  - [1. Introduction](#1-introduction)
+  - [2. Updates!!](#2-updates)
+  - [3. Coming soon](#3-coming-soon)
+  - [4. Quick Start](#4-quick-start)
+    - [4.1. ✨ Start the app in Docker](#41--start-the-app-in-docker)
+  - [5. Detail](#5-detail)
+    - [5.1. ✨ フォルダ構成](#51--フォルダ構成)
+  - [6. Sample basic site](#6-sample-basic-site)
+    - [6.1. Simple text page](#61-simple-text-page)
+    - [6.2. Simple HTML page](#62-simple-html-page)
+    - [6.3. POST page](#63-post-page)
+    - [6.4. Active sidebar](#64-active-sidebar)
+    - [6.5. Switch sidebar](#65-switch-sidebar)
+    - [6.6. Simple progress bar](#66-simple-progress-bar)
+    - [6.7. Add new page](#67-add-new-page)
+  - [6. Sample chart site](#6-sample-chart-site)
+    - [6.6. Simple chart](#66-simple-chart)
+  - [7. Reference site](#7-reference-site)
+  - [8. memo](#8-memo)
 
 ## 1. Introduction
 
@@ -887,3 +889,10 @@ $(document).ready(function () {
 rsync -auv /home/ /root/
 python run.py
 ```
+
+n = 5
+s = 5
+5 10 15 20 25 ; 32 39 46
+f = 32
+n = 3
+s = 7
