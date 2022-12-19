@@ -46,13 +46,13 @@ https://github.com/HamaruKi0303/flask-black-dashboard
 * 【2022/12/07】[サンプルサイト](#6-sample-site)：app1~app5を作成
 * 【2022/12/15】[Simple progress bar](#66-simple-progress-bar)：app6を作成
 * 【2022/12/15】[Add new page](#67-add-new-page)
-* 【2022/12/16】[Demo chart page](#67-add-new-page) : app7を作成
-* 【2022/12/17】[Radio & date form page](#67-add-new-page) : app8を作成
-* 【2022/12/18】[Index page](#67-add-new-page) : app9を作成
-* 【2022/12/18】[Config update page](#67-add-new-page) : app10を作成
-* 【2022/12/18】[Config parser page](#67-add-new-page) : app11を作成
-* 【2022/12/19】[Table preview page](#67-add-new-page) : app12を作成
-* 【2022/12/19】[Visual page](#67-add-new-page) : app13を作成
+* 【2022/12/16】[Demo chart page](#71-simple-chart) : app7を作成
+* 【2022/12/17】[Radio & date form page](#72-radio--date-form-page) : app8を作成
+* 【2022/12/18】[Index page](#73-index-page) : app9を作成
+* 【2022/12/18】[Config update page](#74-config-update-page) : app10を作成
+* 【2022/12/18】[Config parser page](#75-config-parser-page) : app11を作成
+* 【2022/12/19】[Table preview page](#76-table-preview-page) : app12を作成
+* 【2022/12/19】[Visual page](#77-visual-page) : app13を作成
 ## 3. Coming soon
 - [ ] グラフ可視化方法の検討
 
