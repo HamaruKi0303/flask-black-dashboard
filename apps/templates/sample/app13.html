@@ -14,8 +14,8 @@
         <div class="col-12">
             <div class="card card-chart">
                 <div class="card-header">
-                    <h5 class="card-category">Sample chart</h5>
-                    <h2 class="card-title">ID : chartLinePurple</h2>
+                    <h5 class="card-category">Weight chart</h5>
+                    <h2 class="card-title">ID : Abdominal-Crunch</h2>
                 </div>
                 <div class="card-body">
                     <div class="chart-area">
@@ -81,7 +81,7 @@ $(document).ready(function () {
                 },
                 ticks: {
                     suggestedMin: 60,
-                    suggestedMax: 125,
+                    suggestedMax: 50,
                     padding: 20,
                     fontColor: "#9a9a9a"
                 }
@@ -112,7 +112,7 @@ $(document).ready(function () {
         gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
 
         var data = {
-        labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+        labels: {{chart_dcit["Abdominal-Crunch"]["x"]}},
         datasets: [{
             label: "Data",
             fill: true,
@@ -128,7 +128,7 @@ $(document).ready(function () {
             pointHoverRadius: 4,
             pointHoverBorderWidth: 15,
             pointRadius: 4,
-            data: [80, 100, 70, 80, 120, 80],
+            data: {{chart_dcit["Abdominal-Crunch"]["y"]}},
         }]
         };
 
