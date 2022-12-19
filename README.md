@@ -27,6 +27,7 @@
   - [7.4. Config update page](#74-config-update-page)
   - [7.5. Config parser page](#75-config-parser-page)
   - [7.6. Table preview page](#76-table-preview-page)
+  - [7.7. Visual page](#77-visual-page)
 - [8. Reference site](#8-reference-site)
 - [9. memo](#9-memo)
 
@@ -51,8 +52,9 @@ https://github.com/HamaruKi0303/flask-black-dashboard
 * 【2022/12/18】[Config update page](#67-add-new-page) : app10を作成
 * 【2022/12/18】[Config parser page](#67-add-new-page) : app11を作成
 * 【2022/12/19】[Table preview page](#67-add-new-page) : app12を作成
+* 【2022/12/19】[Visual page](#67-add-new-page) : app13を作成
 ## 3. Coming soon
-- [ ] グラフの描画
+- [ ] グラフ可視化方法の検討
 
 ## 4. Quick Start
 
@@ -1060,7 +1062,51 @@ HTMLでループ処理しやすいように`to_dict('records')`で変換しま�
     </div>
 ```
 
+### 7.7. Visual page
 
+`DataFrame`を使ってグラフに可視化していきます．
+
+![](https://i.imgur.com/XfTLae5.png)
+
+チャート用の辞書(`chart_dcit`)を用意します．ここで`x`,`y`に数値を入れることで描画できます．
+`apps\home\sample\app13.py`
+
+```python
+    chart_dcit = {}
+    target_weight_name = "Abdominal-Crunch"
+    target_df_merged_data = df_merged_data[df_merged_data["weight_name"] == target_weight_name]
+    logger.info("target_df_merged_data : \n{}".format(target_df_merged_data))
+    target_df_merged_data = target_df_merged_data.drop(['ID', 'tstr-min', 'tstr-day', 'weight_name', 'total'], axis=1)
+    logger.info("target_df_merged_data : \n{}".format(target_df_merged_data))
+    chart_dcit[target_weight_name] = {}
+    chart_dcit[target_weight_name]["x"] = list(range(len(target_df_merged_data.values.reshape(-1))))
+    chart_dcit[target_weight_name]["y"] = list(target_df_merged_data.values.reshape(-1))
+```
+
+HTML内のjavascriptはこんな感じです．
+`apps\templates\sample\app13.html`
+```js
+        var data = {
+        labels: {{chart_dcit["Abdominal-Crunch"]["x"]}},
+        datasets: [{
+            label: "Data",
+            fill: true,
+            backgroundColor: gradientStroke,
+            borderColor: '#d048b6',
+            borderWidth: 2,
+            borderDash: [],
+            borderDashOffset: 0.0,
+            pointBackgroundColor: '#d048b6',
+            pointBorderColor: 'rgba(255,255,255,0)',
+            pointHoverBackgroundColor: '#d048b6',
+            pointBorderWidth: 20,
+            pointHoverRadius: 4,
+            pointHoverBorderWidth: 15,
+            pointRadius: 4,
+            data: {{chart_dcit["Abdominal-Crunch"]["y"]}},
+        }]
+        };
+```
 
 
 ## 8. Reference site
