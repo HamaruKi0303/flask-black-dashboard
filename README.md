@@ -5,27 +5,25 @@
 
 # Index
 
-- [FLASK dashboard](#flask-dashboard)
-- [Index](#index)
-  - [1. Introduction](#1-introduction)
-  - [2. Updates!!](#2-updates)
-  - [3. Coming soon](#3-coming-soon)
-  - [4. Quick Start](#4-quick-start)
-    - [4.1. ✨ Start the app in Docker](#41--start-the-app-in-docker)
-  - [5. Detail](#5-detail)
-    - [5.1. ✨ フォルダ構成](#51--フォルダ構成)
-  - [6. Sample basic site](#6-sample-basic-site)
-    - [6.1. Simple text page](#61-simple-text-page)
-    - [6.2. Simple HTML page](#62-simple-html-page)
-    - [6.3. POST page](#63-post-page)
-    - [6.4. Active sidebar](#64-active-sidebar)
-    - [6.5. Switch sidebar](#65-switch-sidebar)
-    - [6.6. Simple progress bar](#66-simple-progress-bar)
-    - [6.7. Add new page](#67-add-new-page)
-  - [6. Sample chart site](#6-sample-chart-site)
-    - [6.6. Simple chart](#66-simple-chart)
-  - [7. Reference site](#7-reference-site)
-  - [8. memo](#8-memo)
+- [1. Introduction](#1-introduction)
+- [2. Updates!!](#2-updates)
+- [3. Coming soon](#3-coming-soon)
+- [4. Quick Start](#4-quick-start)
+  - [4.1. ✨ Start the app in Docker](#41--start-the-app-in-docker)
+- [5. Detail](#5-detail)
+  - [5.1. ✨ フォルダ構成](#51--フォルダ構成)
+- [6. Sample basic site](#6-sample-basic-site)
+  - [6.1. Simple text page](#61-simple-text-page)
+  - [6.2. Simple HTML page](#62-simple-html-page)
+  - [6.3. POST page](#63-post-page)
+  - [6.4. Active sidebar](#64-active-sidebar)
+  - [6.5. Switch sidebar](#65-switch-sidebar)
+  - [6.6. Simple progress bar](#66-simple-progress-bar)
+  - [6.7. Add new page](#67-add-new-page)
+- [6. Sample chart site](#6-sample-chart-site)
+  - [6.6. Simple chart](#66-simple-chart)
+- [7. Reference site](#7-reference-site)
+- [8. memo](#8-memo)
 
 ## 1. Introduction
 
@@ -42,6 +40,12 @@ https://github.com/HamaruKi0303/flask-black-dashboard
 * 【2022/12/07】[サンプルサイト](#6-sample-site)：app1~app5を作成
 * 【2022/12/15】[Simple progress bar](#66-simple-progress-bar)：app6を作成
 * 【2022/12/15】[Add new page](#67-add-new-page)
+* 【2022/12/16】[Demo chart page](#67-add-new-page) : app7を作成
+* 【2022/12/17】[Radio page](#67-add-new-page) : app8を作成
+* 【2022/12/18】[Index page](#67-add-new-page) : app9を作成
+* 【2022/12/18】[Config update page](#67-add-new-page) : app10を作成
+* 【2022/12/18】[Config parser page](#67-add-new-page) : app11を作成
+* 【2022/12/19】[Table preview page](#67-add-new-page) : app12を作成
 ## 3. Coming soon
 - [ ] グラフの描画
 
