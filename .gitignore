@@ -35,3 +35,4 @@ migrations
 
 apps/static/assets/data/weight_log/*/*.json
 apps/static/assets/data/weight_log_merged_data.csv
+apps/static/assets/data/weight_log_merged_data.csv

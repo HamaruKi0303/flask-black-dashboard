@@ -20,10 +20,15 @@
   - [6.5. Switch sidebar](#65-switch-sidebar)
   - [6.6. Simple progress bar](#66-simple-progress-bar)
   - [6.7. Add new page](#67-add-new-page)
-- [6. Sample chart site](#6-sample-chart-site)
-  - [6.6. Simple chart](#66-simple-chart)
-- [7. Reference site](#7-reference-site)
-- [8. memo](#8-memo)
+- [7. Sample chart site](#7-sample-chart-site)
+  - [7.1. Simple chart](#71-simple-chart)
+  - [7.2. Radio \& Date form page](#72-radio--date-form-page)
+  - [7.3. Index page](#73-index-page)
+  - [7.4. Config update page](#74-config-update-page)
+  - [7.5. Config parser page](#75-config-parser-page)
+  - [7.6. Table preview page](#76-table-preview-page)
+- [8. Reference site](#8-reference-site)
+- [9. memo](#9-memo)
 
 ## 1. Introduction
 
@@ -41,7 +46,7 @@ https://github.com/HamaruKi0303/flask-black-dashboard
 * 【2022/12/15】[Simple progress bar](#66-simple-progress-bar)：app6を作成
 * 【2022/12/15】[Add new page](#67-add-new-page)
 * 【2022/12/16】[Demo chart page](#67-add-new-page) : app7を作成
-* 【2022/12/17】[Radio page](#67-add-new-page) : app8を作成
+* 【2022/12/17】[Radio & date form page](#67-add-new-page) : app8を作成
 * 【2022/12/18】[Index page](#67-add-new-page) : app9を作成
 * 【2022/12/18】[Config update page](#67-add-new-page) : app10を作成
 * 【2022/12/18】[Config parser page](#67-add-new-page) : app11を作成
@@ -606,11 +611,15 @@ def create_app(config):
 ```
 
 
-## 6. Sample chart site
+## 7. Sample chart site
 
-### 6.6. Simple chart
+入力フォームデータの保存からログデータの統合，データの簡単な可視化までをやっていきます．
+
+### 7.1. Simple chart
 
 シンプルなグラフを作成します．
+
+![](https://i.imgur.com/ceFrV6c.png)
 
 デフォルトのダッシュボードの関数を切り出してきて使用しています．
 
@@ -876,27 +885,193 @@ $(document).ready(function () {
 
 ```
 
-
 👇サイト
 > http://192.168.0.100:7777/sample_app7
 
-![](https://i.imgur.com/ceFrV6c.png)
+### 7.2. Radio & Date form page
+
+ラジオボタンで項目を選択し，登録する日付を選択するフォームを作成します．
+
+![](https://i.imgur.com/rmefyJb.png)
+
+ラジオボタン部分は`apps\templates\sample\app8.html`の下記の部分です．
+
+`data-toggle="buttons"`を忘れるとまともに機能しないので注意です．後は，通常のフォームとやることは変わりません．
+
+```html
+    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        {% for j in range(1,dict["step-num"]+dict["step-num2"]) %}
+        <label class="btn btn-sm btn-primary btn-simple"
+            id={{dict["name"]}}_{{i+1}}_{{j+1}}>
+            <input type="radio" name={{dict["name"]}}_{{i+1}}
+                id={{dict["name"]}}_{{i+1}}_{{j+1}} autocomplete="off"
+                value={{dict[j|string]}}>
+            {{dict[j|string]}}
+        </label>
+        {% endfor %}
+    </div>
+```
+
+日付の部分はこちらです．
+
+```html
+    <label class="label2" for="logging-time">
+        <input class="input2" type="datetime-local" id="logging-time"
+            name="logging-time" value={{dict["tstr-value"]}}>
+    </label>
+```
+
+これを追加することで，日付を選択することができます．
+
+![](https://i.imgur.com/ObJfsy4.png)
+
+`label2`, `input2`のデザインはこちらです．
+
+`apps\static\assets\demo\demo.css`
+```css
+    .label2 {
+        position: relative;
+        display: inline-block;
+        width: 200px;
+        height: 36px;
+        border: 2px solid #ccc;
+        border-radius: 15px;
+    }
+    .input2 {
+        position: relative;
+        padding: 0 10px;
+        width: 200px;
+        height: 36px;
+        border: 0;
+        background: transparent;
+        box-sizing: border-box;
+        font-size: 14px;
+        color: #999;
+    }
+```
+
+### 7.3. Index page
+
+ページが長くなるとショートカットが欲しくなります．そこで，目次を作成してそこにショートカットを貼ることで一瞬で該当箇所に飛べるようにしました．
+
+![](https://i.imgur.com/PRLjwGo.png)
+
+各カードに`ID`を指定しておきます．
+```html
+    <div class="card-body" id={{dict["name"]}}>
+        <div class="table-responsive">
+```
+
+あとは，これに飛ぶように指定することでショートカットが作成できます．
+```html
+    <td>
+        <a href=#{{dict["name"]}}>{{dict["name"]}}</a>
+    </td>
+```
 
 
-## 7. Reference site
+### 7.4. Config update page
+
+`Config`ファイル(`apps\static\assets\data\category_weight.csv`)をアプリから修正できるようにしました．
+
+![](https://i.imgur.com/Uzi93F9.png)
+
+
+### 7.5. Config parser page
+
+アプリのログファイルの場所やデータの保存場所などの設定を記載する`INI`ファイル(`apps\static\assets\config\example_config.ini`)を使用できるようにしました．
+
+`apps\home\sample\app11.py`
+```python
+    # --------------------------------------------
+    # global param
+    #
+    config_path = "apps/static/assets/config/example_config.ini"
+    config_ini = configparser.ConfigParser()
+    config_ini.read(config_path)
+    #
+    # preview config
+    for section in config_ini.sections():
+        logger.info("{:-^60}".format(section))
+        for k, v in config_ini[section].items():
+            logger.info("{:<30} :{:<20}".format(k, v))
+```
+
+
+
+
+### 7.6. Table preview page
+
+`DataFrame`をHTMLのテーブルで表示できるようにしました．
+
+
+![](https://i.imgur.com/helghNO.png)
+
+
+
+HTMLでループ処理しやすいように`to_dict('records')`で変換します．
+
+`apps\home\sample\app12.py`
+```python
+    dict_list_form = df_weight_total.to_dict('records')
+
+    return render_template(render_template_path,
+                           segment=segment,
+                           dict_list_form=dict_list_form,
+                           running_type=running_type)
+```
+
+変換後は`dict_list_form`に渡され，ループ処理をすることで各列の情報を記載していきます．
+`apps\templates\sample\app12.html`
+```html
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table tablesorter " id="">
+                <thead class=" text-primary">
+                    <tr>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            Name
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dict in dict_list_form %}
+                    <tr>
+                        <td>
+                            {{dict["tstr-min"]}}
+                        </td>
+                        <td>
+                            {{dict["weight_name"]}}
+                        </td>
+                        {% for i in range(1, 16) %}
+                        <td>
+                            {{dict[i|string]}}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+```
+
+
+
+
+## 8. Reference site
 
 - [flask-black-dashboard](https://github.com/app-generator/flask-black-dashboard)
 - [Flaskで簡易版プログレスバー実装して処理の進捗見れるようにしてやんよ!!!](https://tokidoki-web.com/2020/02/flask%E3%81%A7%E7%B0%A1%E6%98%93%E7%89%88%E3%83%97%E3%83%AD%E3%82%B0%E3%83%AC%E3%82%B9%E3%83%90%E3%83%BC%E5%AE%9F%E8%A3%85%E3%81%97%E3%81%A6%E5%87%A6%E7%90%86%E3%81%AE%E9%80%B2%E6%8D%97%E8%A6%8B/)
-## 8. memo
+- [html･CSS ラジオボタンを横並びや縦並びにする方法](https://csshtml.work/side-radio/)
+- [HTML5の日付入力フォームのスタイルを変えてみる](https://blog.mmmcorp.co.jp/blog/2016/10/20/input_date_style/)
+## 9. memo
 
 ```bash
 rsync -auv /home/ /root/
 python run.py
 ```
-
-n = 5
-s = 5
-5 10 15 20 25 ; 32 39 46
-f = 32
-n = 3
-s = 7
