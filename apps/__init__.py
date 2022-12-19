@@ -21,9 +21,11 @@ from apps.home.sample.app5 import bp as sample_app5
 from apps.home.sample.app6 import bp as sample_app6
 from apps.home.sample.app7 import bp as sample_app7
 from apps.home.sample.app8 import bp as sample_app8
+from apps.home.sample.app9 import bp as sample_app9
 from apps.home.sample.app10 import bp as sample_app10
 from apps.home.sample.app11 import bp as sample_app11
 from apps.home.sample.app12 import bp as sample_app12
+from apps.home.sample.app13 import bp as sample_app13
 
 db = SQLAlchemy()
 login_manager = LoginManager()
@@ -69,9 +71,11 @@ def create_app(config):
     app.register_blueprint(sample_app6)
     app.register_blueprint(sample_app7)
     app.register_blueprint(sample_app8)
+    app.register_blueprint(sample_app9)
     app.register_blueprint(sample_app10)
     app.register_blueprint(sample_app11)
     app.register_blueprint(sample_app12)
+    app.register_blueprint(sample_app13)
 
     configure_database(app)
     return app
