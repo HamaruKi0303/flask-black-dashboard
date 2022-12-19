@@ -49,47 +49,42 @@ def sample_app13():
         for k, v in config_ini[section].items():
             logger.info("{:<30} :{:<20}".format(k, v))
 
-    log_file_list = glob.glob(
-        config_ini["FLASK"]["data_root_path"] + "/" +
-        config_ini["LOG"]["root_name"] + "/**/*.json")
-
-    d_log_dat = {}
-    c = ['tstr-min', ]
-    df_weight_total = pd.DataFrame(data=None, index=[1], columns=c)
-    for i, log_file_path in enumerate(log_file_list):
-        with open(log_file_path) as f:
-            log_data = json.load(f)
-
-        df = pd.DataFrame(data=None, index=[1], columns=c)
-        df["tstr-min"] = log_data["tstr-min"]
-        df["tstr-day"] = log_data["tstr-day"]
-
-        count_list = []
-        for k, v in log_data.items():
-            logger.info("{:<30} :{:<20}".format(k, v))
-
-            split_str = k.split("_")
-            if (len(split_str) > 1):
-                weight_name, count = split_str
-                df[str(count)] = v
-                df["weight_name"] = weight_name
-
-        d_log_dat[log_data["tstr-min"]] = count_list
-        if (i == 0):
-            df_weight_total = df
-        else:
-            df_weight_total = pd.concat([df_weight_total, df])
-
-    df_weight_total = df_weight_total.reset_index(drop=True)
-    df_weight_total = df_weight_total.dropna(how='any')
-    print(df_weight_total)
-    df_weight_total.to_csv(config_ini["FLASK"]["data_root_path"] + "/" +
-                           config_ini["WEIGHT"]["merged_data_name"],
-                           index=False)
-
-    dict_list_form = df_weight_total.to_dict('records')
+    # --------------------------------------------
+    # adjust merged data 
+    #
+    merged_data_path = config_ini["FLASK"]["data_root_path"] + "/" + config_ini["WEIGHT"]["merged_data_name"]    
+    logger.info("merged_data_path : {}".format(merged_data_path))
+    df_merged_data = pd.read_csv(merged_data_path)
+    df_merged_data = df_merged_data.reset_index()
+    df_merged_data = df_merged_data.rename(columns={'index': 'ID'})
+    
+    
+    # --------------------------------------------
+    # analysis
+    # 
+    df_merged_data["total"] = 0
+    for i in range(1, int(config_ini["WEIGHT"]["try_num"])+1):
+        df_merged_data["total"] = df_merged_data["total"] + df_merged_data[str(i)]
+    
+    logger.info("df_merged_data : \n{}".format(df_merged_data))
+    
+    chart_dcit = {}
+    target_weight_name = "Abdominal-Crunch"
+    target_df_merged_data = df_merged_data[df_merged_data["weight_name"] == target_weight_name]
+    logger.info("target_df_merged_data : \n{}".format(target_df_merged_data))
+    target_df_merged_data = target_df_merged_data.drop(['ID', 'tstr-min', 'tstr-day', 'weight_name', 'total'], axis=1)
+    logger.info("target_df_merged_data : \n{}".format(target_df_merged_data))
+    chart_dcit[target_weight_name] = {}
+    chart_dcit[target_weight_name]["x"] = list(range(len(target_df_merged_data.values.reshape(-1))))
+    chart_dcit[target_weight_name]["y"] = list(target_df_merged_data.values.reshape(-1))
+    
+    pprint.pprint(chart_dcit)
+    
+    
+    dict_list_form = df_merged_data.to_dict('records')
 
     return render_template(render_template_path,
                            segment=segment,
                            dict_list_form=dict_list_form,
+                           chart_dcit=chart_dcit,
                            running_type=running_type)
