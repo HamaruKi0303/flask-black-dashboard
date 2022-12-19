@@ -5,60 +5,60 @@
 
 # Index
 
-- [1. Introduction](#1-introduction)
-- [2. Updates!!](#2-updates)
-- [3. Coming soon](#3-coming-soon)
-- [4. Quick Start](#4-quick-start)
-  - [4.1. ✨ Start the app in Docker](#41--start-the-app-in-docker)
-- [5. Detail](#5-detail)
-  - [5.1. ✨ フォルダ構成](#51--フォルダ構成)
-- [6. Sample basic site](#6-sample-basic-site)
-  - [6.1. Simple text page](#61-simple-text-page)
-  - [6.2. Simple HTML page](#62-simple-html-page)
-  - [6.3. POST page](#63-post-page)
-  - [6.4. Active sidebar](#64-active-sidebar)
-  - [6.5. Switch sidebar](#65-switch-sidebar)
-  - [6.6. Simple progress bar](#66-simple-progress-bar)
-  - [6.7. Add new page](#67-add-new-page)
-- [7. Sample chart site](#7-sample-chart-site)
-  - [7.1. Simple chart](#71-simple-chart)
-  - [7.2. Radio \& Date form page](#72-radio--date-form-page)
-  - [7.3. Index page](#73-index-page)
-  - [7.4. Config update page](#74-config-update-page)
-  - [7.5. Config parser page](#75-config-parser-page)
-  - [7.6. Table preview page](#76-table-preview-page)
-  - [7.7. Visual page](#77-visual-page)
-- [8. Reference site](#8-reference-site)
-- [9. memo](#9-memo)
+- [Introduction](#introduction)
+- [Updates!!](#updates)
+- [Coming soon](#coming-soon)
+- [Quick Start](#quick-start)
+  - [✨ Start the app in Docker](#-start-the-app-in-docker)
+- [Detail](#detail)
+  - [✨ フォルダ構成](#-フォルダ構成)
+- [Sample basic site](#sample-basic-site)
+  - [Simple text page](#simple-text-page)
+  - [Simple HTML page](#simple-html-page)
+  - [POST page](#post-page)
+  - [Active sidebar](#active-sidebar)
+  - [Switch sidebar](#switch-sidebar)
+  - [Simple progress bar](#simple-progress-bar)
+  - [Add new page](#add-new-page)
+- [Sample chart site](#sample-chart-site)
+  - [Simple chart](#simple-chart)
+  - [Radio \& Date form page](#radio--date-form-page)
+  - [Index page](#index-page)
+  - [Config update page](#config-update-page)
+  - [Config parser page](#config-parser-page)
+  - [Table preview page](#table-preview-page)
+  - [Visual page](#visual-page)
+- [Reference site](#reference-site)
+- [memo](#memo)
 
-## 1. Introduction
+## Introduction
 
 `FLASK`製のダッシュボードのテンプレートです．
 
-基本的に使用するであろう，POSTの通信部分とデータの描画，新規ページの追加，サイドバー付近を開発できるようにサンプルのサイトを作成しました．
+基本的に使用するであろう，POSTの通信部分とデータの描画，新規ページの追加，サイドバー付近を開発できるようにサンプルのサイトを作成しました．**最新版ではグラフの描画なども対応しています．**
 
 このサンプルサイトを複製し，元にすれば開発効率がアップすること間違いなしです．
 
 https://github.com/HamaruKi0303/flask-black-dashboard
 
-## 2. Updates!!
+## Updates!!
 * 【2022/12/05】[元のサイト](https://github.com/app-generator/flask-black-dashboard)のフォーク & base `README.md` の追加
 * 【2022/12/07】[サンプルサイト](#6-sample-site)：app1~app5を作成
 * 【2022/12/15】[Simple progress bar](#66-simple-progress-bar)：app6を作成
 * 【2022/12/15】[Add new page](#67-add-new-page)
-* 【2022/12/16】[Demo chart page](#71-simple-chart) : app7を作成
-* 【2022/12/17】[Radio & date form page](#72-radio--date-form-page) : app8を作成
-* 【2022/12/18】[Index page](#73-index-page) : app9を作成
-* 【2022/12/18】[Config update page](#74-config-update-page) : app10を作成
-* 【2022/12/18】[Config parser page](#75-config-parser-page) : app11を作成
-* 【2022/12/19】[Table preview page](#76-table-preview-page) : app12を作成
-* 【2022/12/19】[Visual page](#77-visual-page) : app13を作成
-## 3. Coming soon
+* 【2022/12/16】[Demo chart page](#67-add-new-page) : app7を作成
+* 【2022/12/17】[Radio & date form page](#67-add-new-page) : app8を作成
+* 【2022/12/18】[Index page](#67-add-new-page) : app9を作成
+* 【2022/12/18】[Config update page](#67-add-new-page) : app10を作成
+* 【2022/12/18】[Config parser page](#67-add-new-page) : app11を作成
+* 【2022/12/19】[Table preview page](#67-add-new-page) : app12を作成
+* 【2022/12/19】[Visual page](#67-add-new-page) : app13を作成
+## Coming soon
 - [ ] グラフ可視化方法の検討
 
-## 4. Quick Start
+## Quick Start
 
-### 4.1. ✨ Start the app in Docker
+### ✨ Start the app in Docker
 
 👉 **Step 1** - ソースコードをダウンロードします．
 
@@ -80,11 +80,11 @@ $ docker-compose up --build
 ![](https://i.imgur.com/SsY476Z.png)
 
 
-## 5. Detail
+## Detail
 
 
 
-### 5.1. ✨ フォルダ構成
+### ✨ フォルダ構成
 
 
 ```bash
@@ -136,11 +136,11 @@ $ docker-compose up --build
 
 
 
-## 6. Sample basic site
+## Sample basic site
 
 機能別に簡易的なページの例を下記に記載します．
 
-### 6.1. Simple text page
+### Simple text page
 
 アクセスするとテキストを返すような一番簡易的なページです．
 
@@ -162,7 +162,7 @@ def sample_app1():
 
 ![](https://i.imgur.com/TaaA7V1.png)
 
-### 6.2. Simple HTML page
+### Simple HTML page
 
 
 `HTML`を返すページです．こちらのファイル`sample/app2.html`を返すページです．Postの送受信機能はありません．
@@ -186,7 +186,7 @@ def sample_app2():
 ![](https://i.imgur.com/6MTEMEE.png)
 
 
-### 6.3. POST page
+### POST page
 
 POSTでやり取りをします．入力フォームのデータをCSVに保存し，テーブルで表示します．
 
@@ -237,7 +237,7 @@ def sample_app3():
 
 ![](https://i.imgur.com/3624YnZ.png)
 
-### 6.4. Active sidebar
+### Active sidebar
 
 サイドバーにアクティブのマークを付けます．
 
@@ -307,7 +307,7 @@ def sample_app4():
 ![](https://i.imgur.com/DPA1UEF.png)
 
 
-### 6.5. Switch sidebar
+### Switch sidebar
 
 開発用と本番用でサイドバーを切り替えます．
 
@@ -400,7 +400,7 @@ def sample_app5():
 
 
 
-### 6.6. Simple progress bar
+### Simple progress bar
 
 シンプルな構成でプログレスバーを作成します．
 
@@ -534,7 +534,7 @@ def sample_app6():
 
 
 
-### 6.7. Add new page
+### Add new page
 
 新しいページの追加方法です．
 
@@ -613,11 +613,11 @@ def create_app(config):
 ```
 
 
-## 7. Sample chart site
+## Sample chart site
 
 入力フォームデータの保存からログデータの統合，データの簡単な可視化までをやっていきます．
 
-### 7.1. Simple chart
+### Simple chart
 
 シンプルなグラフを作成します．
 
@@ -890,7 +890,7 @@ $(document).ready(function () {
 👇サイト
 > http://192.168.0.100:7777/sample_app7
 
-### 7.2. Radio & Date form page
+### Radio & Date form page
 
 ラジオボタンで項目を選択し，登録する日付を選択するフォームを作成します．
 
@@ -952,7 +952,7 @@ $(document).ready(function () {
     }
 ```
 
-### 7.3. Index page
+### Index page
 
 ページが長くなるとショートカットが欲しくなります．そこで，目次を作成してそこにショートカットを貼ることで一瞬で該当箇所に飛べるようにしました．
 
@@ -972,14 +972,14 @@ $(document).ready(function () {
 ```
 
 
-### 7.4. Config update page
+### Config update page
 
 `Config`ファイル(`apps\static\assets\data\category_weight.csv`)をアプリから修正できるようにしました．
 
 ![](https://i.imgur.com/Uzi93F9.png)
 
 
-### 7.5. Config parser page
+### Config parser page
 
 アプリのログファイルの場所やデータの保存場所などの設定を記載する`INI`ファイル(`apps\static\assets\config\example_config.ini`)を使用できるようにしました．
 
@@ -1002,7 +1002,7 @@ $(document).ready(function () {
 
 
 
-### 7.6. Table preview page
+### Table preview page
 
 `DataFrame`をHTMLのテーブルで表示できるようにしました．
 
@@ -1062,7 +1062,7 @@ HTMLでループ処理しやすいように`to_dict('records')`で変換しま�
     </div>
 ```
 
-### 7.7. Visual page
+### Visual page
 
 `DataFrame`を使ってグラフに可視化していきます．
 
@@ -1109,13 +1109,13 @@ HTML内のjavascriptはこんな感じです．
 ```
 
 
-## 8. Reference site
+## Reference site
 
 - [flask-black-dashboard](https://github.com/app-generator/flask-black-dashboard)
 - [Flaskで簡易版プログレスバー実装して処理の進捗見れるようにしてやんよ!!!](https://tokidoki-web.com/2020/02/flask%E3%81%A7%E7%B0%A1%E6%98%93%E7%89%88%E3%83%97%E3%83%AD%E3%82%B0%E3%83%AC%E3%82%B9%E3%83%90%E3%83%BC%E5%AE%9F%E8%A3%85%E3%81%97%E3%81%A6%E5%87%A6%E7%90%86%E3%81%AE%E9%80%B2%E6%8D%97%E8%A6%8B/)
 - [html･CSS ラジオボタンを横並びや縦並びにする方法](https://csshtml.work/side-radio/)
 - [HTML5の日付入力フォームのスタイルを変えてみる](https://blog.mmmcorp.co.jp/blog/2016/10/20/input_date_style/)
-## 9. memo
+## memo
 
 ```bash
 rsync -auv /home/ /root/
