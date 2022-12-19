@@ -63,7 +63,7 @@ https://github.com/HamaruKi0303/flask-black-dashboard
 👉 **Step 1** - ソースコードをダウンロードします．
 
 ```bash
-$ git clone https://github.com/app-generator/flask-black-dashboard.git
+$ git clone https://github.com/HamaruKi0303/flask-black-dashboard.git
 $ cd flask-black-dashboard
 ```
 
