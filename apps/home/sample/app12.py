@@ -50,7 +50,8 @@ def sample_app12():
             logger.info("{:<30} :{:<20}".format(k, v))
 
     log_file_list = glob.glob(
-        config_ini["FLASK"]["data_root_path"] + "/" + config_ini["LOG"]["root_name"] + "/**/*.json")
+        config_ini["FLASK"]["data_root_path"] + "/" +
+        config_ini["LOG"]["root_name"] + "/**/*.json")
 
     d_log_dat = {}
     c = ['tstr-min', ]
@@ -83,7 +84,8 @@ def sample_app12():
     df_weight_total = df_weight_total.dropna(how='any')
     print(df_weight_total)
     df_weight_total.to_csv(config_ini["FLASK"]["data_root_path"] + "/" +
-                           config_ini["WEIGHT"]["merged_data_name"], index=False)
+                           config_ini["WEIGHT"]["merged_data_name"],
+                           index=False)
 
     dict_list_form = df_weight_total.to_dict('records')
 
