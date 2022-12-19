@@ -1,3 +1,17 @@
-﻿name,first,step_size,step_num,try_num
-Abdominal-Crunch,5,5,9,15
-Triceps extension,5,5,9,15
+id,name,first,step-size,step-num,try-num,first2,step-num2,step-size2
+1,Abdominal-Crunch,5.0,5,9,15,0,0,0
+2,Triceps-extension,5.0,5,9,15,0,0,0
+3,Biceps-curl,5,5,5,15,32,4,7
+4,Lateral-noise,5.0,5,9,15,0,0,0
+5,Shoulder-press,5.0,5,9,15,0,0,0
+6,Chest-press,5.0,5,9,15,0,0,0
+7,sample6,5.0,7,9,15,0,0,0
+8,Hip-abductor,67.5,5,9,15,0,0,0
+9,Seated-leg-press,5.0,10,9,15,0,0,0
+10,Leg-extension,5.0,7,9,15,0,0,0
+11,Low-Low,10.0,10,9,15,0,0,0
+12,Pull-down,5.0,7,9,15,0,0,0
+13,Torso-rotation,10.0,7,9,15,0,0,0
+14,sample1,13.0,5,5,15,0,0,0
+15,sample2,5.0,5,5,15,0,0,0
+16,sample3,5.0,5,5,15,0,0,0

@@ -15,17 +15,17 @@ import pandas as pd
 import pprint
 from loguru import logger
 # Blueprint を作成
-bp = Blueprint('sample_app8', __name__)
+bp = Blueprint('sample_app9', __name__)
 
 
 # /post にアクセスされ、GETもしくはPOSTメソッドでデータが送信された場合の処理
-@bp.route('/sample_app8', methods=['GET', 'POST'])
-def sample_app8():
+@bp.route('/sample_app9', methods=['GET', 'POST'])
+def sample_app9():
 
     # --------------------------------------------
     # param
     #
-    segment = "sample_app8"
+    segment = "sample_app9"
     # running_type = "develop"
     running_type = "master"
     flask_data = "apps/static/assets/data"
@@ -100,7 +100,7 @@ def sample_app8():
     logger.info("df_weight_data : \n{}".format(df_weight_data))
     dict_list_form = df_weight_data.to_dict('records')
 
-    return render_template('sample/app8.html',
+    return render_template('sample/app9.html',
                            segment=segment,
                            dict_list_form=dict_list_form,
                            running_type=running_type)
